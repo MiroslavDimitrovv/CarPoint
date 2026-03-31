@@ -1,6 +1,6 @@
-﻿@model CarDealership.Models.Car
-@using CarDealership.Data
-@using CarDealership.Models
+@model CarPoint.Models.Car
+@using CarPoint.Data
+@using CarPoint.Models
 @using Microsoft.AspNetCore.Identity
 @using System.Text.Json
 @inject ApplicationDbContext Db
@@ -30,7 +30,7 @@
 }
 
 <div class="container py-4">
-    <a asp-action="Index" class="btn btn-link mb-3">← Назад</a>
+    <a asp-action="Index" class="btn btn-link mb-3">< Назад</a>
 
     @if (TempData["Error"] != null)
     {

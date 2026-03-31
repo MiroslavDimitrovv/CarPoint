@@ -1,4 +1,18 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+document.addEventListener("DOMContentLoaded", function () {
+    const popup = document.getElementById("guestSupportPopup");
+    const closeButton = document.getElementById("guestSupportPopupClose");
+    const storageKey = "carpoint_guest_support_popup_closed";
 
-// Write your JavaScript code.
+    if (!popup) {
+        return;
+    }
+
+    if (localStorage.getItem(storageKey) === "true") {
+        popup.classList.add("d-none");
+    }
+
+    closeButton?.addEventListener("click", function () {
+        popup.classList.add("d-none");
+        localStorage.setItem(storageKey, "true");
+    });
+});

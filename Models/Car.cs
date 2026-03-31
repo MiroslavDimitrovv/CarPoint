@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace CarDealership.Models
+namespace CarPoint.Models
 {
     public class Car : IValidatableObject
     {

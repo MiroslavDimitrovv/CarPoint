@@ -1,5 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
 using System;
@@ -8,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using CarDealership.Models;
+using CarPoint.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -16,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace CarDealership.Areas.Identity.Pages.Account
+namespace CarPoint.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
@@ -29,46 +27,30 @@ namespace CarDealership.Areas.Identity.Pages.Account
             _logger = logger;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public string ReturnUrl { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [TempData]
         public string ErrorMessage { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public class InputModel
         {
-            [Required(ErrorMessage = "Имейлът е задължителен.")]
-            [EmailAddress(ErrorMessage = "Невалиден имейл.")]
-            [Display(Name = "Имейл")]
+            [Required(ErrorMessage = "РРјРµР№Р»СЉС‚ Рµ Р·Р°РґСЉР»Р¶РёС‚РµР»РµРЅ.")]
+            [EmailAddress(ErrorMessage = "РќРµРІР°Р»РёРґРµРЅ РёРјРµР№Р».")]
+            [Display(Name = "РРјРµР№Р»")]
             public string Email { get; set; } = "";
 
-            [Required(ErrorMessage = "Паролата е задължителна.")]
+            [Required(ErrorMessage = "РџР°СЂРѕР»Р°С‚Р° Рµ Р·Р°РґСЉР»Р¶РёС‚РµР»РЅР°.")]
             [DataType(DataType.Password)]
-            [Display(Name = "Парола")]
+            [Display(Name = "РџР°СЂРѕР»Р°")]
             public string Password { get; set; } = "";
 
-            [Display(Name = "Запомни ме")]
+            [Display(Name = "Р—Р°РїРѕРјРЅРё РјРµ")]
             public bool RememberMe { get; set; }
         }
 
@@ -81,7 +63,6 @@ namespace CarDealership.Areas.Identity.Pages.Account
 
             returnUrl ??= Url.Content("~/");
 
-            // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -97,8 +78,6 @@ namespace CarDealership.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
@@ -116,12 +95,11 @@ namespace CarDealership.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Невалиден опит за влизане!");
+                    ModelState.AddModelError(string.Empty, "РќРµРІР°Р»РёРґРµРЅ РѕРїРёС‚ Р·Р° РІР»РёР·Р°РЅРµ!");
                     return Page();
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return Page();
         }
     }

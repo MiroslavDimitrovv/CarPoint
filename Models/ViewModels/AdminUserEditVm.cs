@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace CarDealership.Models.ViewModels
+namespace CarPoint.Models.ViewModels
 {
     public class AdminUserEditVm
     {

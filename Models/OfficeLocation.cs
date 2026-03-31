@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
-namespace CarDealership.Models
+namespace CarPoint.Models
 {
     public enum OfficeLocation
     {

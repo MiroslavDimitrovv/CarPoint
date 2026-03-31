@@ -1,7 +1,7 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace CarDealership.Services.CarValuation
+namespace CarPoint.Services.CarValuation
 {
     public interface ICarValuationService
     {

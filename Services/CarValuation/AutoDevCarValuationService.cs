@@ -1,7 +1,7 @@
-﻿using System.Net.Http.Headers;
+using System.Net.Http.Headers;
 using System.Text.Json;
 
-namespace CarDealership.Services.CarValuation
+namespace CarPoint.Services.CarValuation
 {
     public class AutoDevCarValuationService : ICarValuationService
     {

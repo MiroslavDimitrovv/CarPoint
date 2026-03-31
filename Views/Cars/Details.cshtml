@@ -1,11 +1,11 @@
-@model CarDealership.Models.Car
-@using CarDealership.Data
+@model CarPoint.Models.Car
+@using CarPoint.Data
 @using Microsoft.AspNetCore.Identity
 @inject ApplicationDbContext Db
-@inject UserManager<CarDealership.Models.ApplicationUser> UserManager
+@inject UserManager<CarPoint.Models.ApplicationUser> UserManager
 
 @{
-    ViewData["Title"] = "Детайли";
+    ViewData["Title"] = "Р”РµС‚Р°Р№Р»Рё";
 
     var userId = User.Identity?.IsAuthenticated == true ? UserManager.GetUserId(User) : null;
 
@@ -17,17 +17,17 @@
 
     string BgFuel(string v) => v switch
     {
-        "Petrol" => "Бензин",
-        "Diesel" => "Дизел",
-        "Hybrid" => "Хибрид",
-        "Electric" => "Електрическа",
+        "Petrol" => "Р‘РµРЅР·РёРЅ",
+        "Diesel" => "Р”РёР·РµР»",
+        "Hybrid" => "РҐРёР±СЂРёРґ",
+        "Electric" => "Р•Р»РµРєС‚СЂРёС‡РµСЃРєР°",
         _ => v
     };
 
     string BgTransmission(string v) => v switch
     {
-        "Manual" => "Ръчна",
-        "Automatic" => "Автоматична",
+        "Manual" => "Р СЉС‡РЅР°",
+        "Automatic" => "РђРІС‚РѕРјР°С‚РёС‡РЅР°",
         _ => v
     };
 }
@@ -35,7 +35,7 @@
 <div class="container py-4">
     <div class="d-flex align-items-center justify-content-between mb-3">
         <div>
-            <h1 class="h4 mb-0">Детайли</h1>
+            <h1 class="h4 mb-0">Р”РµС‚Р°Р№Р»Рё</h1>
             <div class="text-muted">@Model.Brand @Model.Model</div>
         </div>
 
@@ -49,13 +49,13 @@
                 @if (isFav)
                 {
                     <button type="submit" class="btn btn-outline-danger">
-                        ?? Премахни от любими
+                        ?? РџСЂРµРјР°С…РЅРё РѕС‚ Р»СЋР±РёРјРё
                     </button>
                 }
                 else
                 {
                     <button type="submit" class="btn btn-outline-danger">
-                        ?? Добави в любими
+                        ?? Р”РѕР±Р°РІРё РІ Р»СЋР±РёРјРё
                     </button>
                 }
             </form>
@@ -63,7 +63,7 @@
         else
         {
             <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-secondary">
-                Влез, за да добавиш в любими
+                Р’Р»РµР·, Р·Р° РґР° РґРѕР±Р°РІРёС€ РІ Р»СЋР±РёРјРё
             </a>
         }
     </div>
@@ -71,50 +71,50 @@
     <div class="card shadow-sm border-0">
         <div class="card-body">
             <dl class="row mb-0">
-                <dt class="col-sm-4 col-lg-3">Марка</dt>
+                <dt class="col-sm-4 col-lg-3">РњР°СЂРєР°</dt>
                 <dd class="col-sm-8 col-lg-9">@Model.Brand</dd>
 
-                <dt class="col-sm-4 col-lg-3">Модел</dt>
+                <dt class="col-sm-4 col-lg-3">РњРѕРґРµР»</dt>
                 <dd class="col-sm-8 col-lg-9">@Model.Model</dd>
 
-                <dt class="col-sm-4 col-lg-3">Година</dt>
+                <dt class="col-sm-4 col-lg-3">Р“РѕРґРёРЅР°</dt>
                 <dd class="col-sm-8 col-lg-9">@Model.Year</dd>
 
-                <dt class="col-sm-4 col-lg-3">Описание</dt>
+                <dt class="col-sm-4 col-lg-3">РћРїРёСЃР°РЅРёРµ</dt>
                 <dd class="col-sm-8 col-lg-9">@Model.Description</dd>
 
-                <dt class="col-sm-4 col-lg-3">Километраж</dt>
+                <dt class="col-sm-4 col-lg-3">РљРёР»РѕРјРµС‚СЂР°Р¶</dt>
                 <dd class="col-sm-8 col-lg-9">@Model.Mileage km</dd>
 
-                <dt class="col-sm-4 col-lg-3">Двигател</dt>
+                <dt class="col-sm-4 col-lg-3">Р”РІРёРіР°С‚РµР»</dt>
                 <dd class="col-sm-8 col-lg-9">@Model.Engine</dd>
 
-                <dt class="col-sm-4 col-lg-3">Мощност</dt>
-                <dd class="col-sm-8 col-lg-9">@Model.HorsePower к.с.</dd>
+                <dt class="col-sm-4 col-lg-3">РњРѕС‰РЅРѕСЃС‚</dt>
+                <dd class="col-sm-8 col-lg-9">@Model.HorsePower Рє.СЃ.</dd>
 
-                <dt class="col-sm-4 col-lg-3">Гориво</dt>
+                <dt class="col-sm-4 col-lg-3">Р“РѕСЂРёРІРѕ</dt>
                 <dd class="col-sm-8 col-lg-9">@BgFuel(Model.FuelType)</dd>
 
-                <dt class="col-sm-4 col-lg-3">Скоростна кутия</dt>
+                <dt class="col-sm-4 col-lg-3">РЎРєРѕСЂРѕСЃС‚РЅР° РєСѓС‚РёСЏ</dt>
                 <dd class="col-sm-8 col-lg-9">@BgTransmission(Model.Transmission)</dd>
 
-                <dt class="col-sm-4 col-lg-3">Тип</dt>
+                <dt class="col-sm-4 col-lg-3">РўРёРї</dt>
                 <dd class="col-sm-8 col-lg-9">@Model.Type</dd>
 
-                <dt class="col-sm-4 col-lg-3">Цена за продажба</dt>
-                <dd class="col-sm-8 col-lg-9">@Model.SalePrice €</dd>
+                <dt class="col-sm-4 col-lg-3">Р¦РµРЅР° Р·Р° РїСЂРѕРґР°Р¶Р±Р°</dt>
+                <dd class="col-sm-8 col-lg-9">@Model.SalePrice в‚¬</dd>
 
-                <dt class="col-sm-4 col-lg-3">Цена за наем (ден)</dt>
-                <dd class="col-sm-8 col-lg-9">@Model.RentPricePerDay €</dd>
+                <dt class="col-sm-4 col-lg-3">Р¦РµРЅР° Р·Р° РЅР°РµРј (РґРµРЅ)</dt>
+                <dd class="col-sm-8 col-lg-9">@Model.RentPricePerDay в‚¬</dd>
 
-                <dt class="col-sm-4 col-lg-3">Статус</dt>
+                <dt class="col-sm-4 col-lg-3">РЎС‚Р°С‚СѓСЃ</dt>
                 <dd class="col-sm-8 col-lg-9">@Model.Status</dd>
             </dl>
         </div>
     </div>
 
     <div class="d-flex gap-2 mt-3">
-        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.Id">Редакция</a>
-        <a class="btn btn-outline-secondary" asp-action="Index">Назад към списъка</a>
+        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.Id">Р РµРґР°РєС†РёСЏ</a>
+        <a class="btn btn-outline-secondary" asp-action="Index">РќР°Р·Р°Рґ РєСЉРј СЃРїРёСЃСЉРєР°</a>
     </div>
 </div>

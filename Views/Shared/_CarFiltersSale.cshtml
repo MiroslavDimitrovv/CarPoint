@@ -1,16 +1,15 @@
-﻿@model CarDealership.Models.ViewModels.CarFilterVm
+@model CarPoint.Models.ViewModels.CarFilterVm
 
-<form method="get" asp-controller="Sales" asp-action="Index" class="vstack gap-2">
-
+<form method="get" asp-controller="Sales" asp-action="Index" class="filter-form">
     <div>
         <label class="form-label">Търсене</label>
-        <input class="form-control" name="Q" value="@Model.Q" placeholder="Марка, модел, двигател..." />
+        <input class="form-control" name="Q" value="@Model.Q" placeholder="Марка, модел, двигател" />
     </div>
 
     <div>
         <label class="form-label">Марка</label>
         <select class="form-select" name="Brand">
-            <option value="">(всички)</option>
+            <option value="">Всички</option>
             @foreach (var b in Model.Brands)
             {
                 <option value="@b" selected="@(Model.Brand == b)">@b</option>
@@ -21,7 +20,7 @@
     <div>
         <label class="form-label">Гориво</label>
         <select class="form-select" name="FuelType">
-            <option value="">(всички)</option>
+            <option value="">Всички</option>
             @foreach (var f in Model.FuelTypes)
             {
                 <option value="@f" selected="@(Model.FuelType == f)">@f</option>
@@ -32,7 +31,7 @@
     <div>
         <label class="form-label">Скоростна кутия</label>
         <select class="form-select" name="Transmission">
-            <option value="">(всички)</option>
+            <option value="">Всички</option>
             @foreach (var t in Model.Transmissions)
             {
                 <option value="@t" selected="@(Model.Transmission == t)">@t</option>
@@ -59,28 +58,25 @@
     <div class="row g-2">
         <div class="col">
             <label class="form-label">Цена от (€)</label>
-            <input class="form-control" type="number" step="1" name="PriceFrom" value="@Model.PriceFrom" />
+            <input class="form-control" type="number" name="PriceFrom" value="@Model.PriceFrom" />
         </div>
         <div class="col">
             <label class="form-label">Цена до (€)</label>
-            <input class="form-control" type="number" step="1" name="PriceTo" value="@Model.PriceTo" />
+            <input class="form-control" type="number" name="PriceTo" value="@Model.PriceTo" />
         </div>
     </div>
 
     <div class="row g-2">
         <div class="col">
-            <label class="form-label">К.с. от</label>
+            <label class="form-label">Коне от</label>
             <input class="form-control" type="number" name="HorsePowerFrom" value="@Model.HorsePowerFrom" />
         </div>
         <div class="col">
-            <label class="form-label">К.с. до</label>
+            <label class="form-label">Коне до</label>
             <input class="form-control" type="number" name="HorsePowerTo" value="@Model.HorsePowerTo" />
         </div>
     </div>
 
-    <button class="btn btn-primary" type="submit">Покажи</button>
-
-    <a class="btn btn-outline-secondary" asp-controller="Sales" asp-action="Index">
-        Изчисти филтрите
-    </a>
+    <button class="btn btn-brand w-100" type="submit">Покажи</button>
+    <a class="btn btn-brand-outline w-100" asp-controller="Sales" asp-action="Index">Изчисти</a>
 </form>

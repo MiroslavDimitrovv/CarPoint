@@ -1,18 +1,22 @@
-﻿@model CarDealership.Models.ViewModels.Support.SupportTicketCreateVm
-@using CarDealership.Models
+﻿@model CarPoint.Models.ViewModels.Support.SupportTicketCreateVm
+@using CarPoint.Models
 
 @{
-    ViewData["Title"] = "Помощ";
+    ViewData["Title"] = "Поддръжка";
+    var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
 }
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h4 m-0">Помощ – Нов тикет</h1>
+        <h1 class="h4 m-0">Поддръжка</h1>
 
-        <a class="btn btn-outline-secondary" asp-controller="Support" asp-action="My">
-            Моите тикети
-        </a>
+        @if (isAuthenticated)
+        {
+            <a class="btn btn-outline-secondary" asp-controller="Support" asp-action="My">Моите тикети</a>
+        }
     </div>
+
+    <p class="text-muted mb-4">Изпрати запитване и екипът на CarPoint ще се свърже с теб възможно най-скоро.</p>
 
     @if (TempData["Success"] != null)
     {
@@ -24,6 +28,21 @@
             <form method="post" class="row g-3">
                 @Html.AntiForgeryToken()
 
+                @if (!isAuthenticated)
+                {
+                    <div class="col-12 col-md-6">
+                        <label asp-for="GuestName" class="form-label"></label>
+                        <input asp-for="GuestName" class="form-control" />
+                        <span asp-validation-for="GuestName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label asp-for="GuestEmail" class="form-label"></label>
+                        <input asp-for="GuestEmail" class="form-control" />
+                        <span asp-validation-for="GuestEmail" class="text-danger"></span>
+                    </div>
+                }
+
                 <div class="col-12">
                     <label asp-for="Subject" class="form-label"></label>
                     <input asp-for="Subject" class="form-control" />
@@ -32,15 +51,13 @@
 
                 <div class="col-12 col-md-6">
                     <label asp-for="Category" class="form-label"></label>
-                    <select asp-for="Category" class="form-select"
-                            asp-items="Html.GetEnumSelectList<TicketCategory>()"></select>
+                    <select asp-for="Category" class="form-select" asp-items="Html.GetEnumSelectList<TicketCategory>()"></select>
                     <span asp-validation-for="Category" class="text-danger"></span>
                 </div>
 
                 <div class="col-12 col-md-6">
                     <label asp-for="Priority" class="form-label"></label>
-                    <select asp-for="Priority" class="form-select"
-                            asp-items="Html.GetEnumSelectList<TicketPriority>()"></select>
+                    <select asp-for="Priority" class="form-select" asp-items="Html.GetEnumSelectList<TicketPriority>()"></select>
                     <span asp-validation-for="Priority" class="text-danger"></span>
                 </div>
 
@@ -52,7 +69,7 @@
 
                 <div class="col-12 d-flex gap-2">
                     <button class="btn btn-primary" type="submit">Изпрати</button>
-                    <a class="btn btn-outline-secondary" asp-controller="Support" asp-action="My">Отказ</a>
+                    <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">Отказ</a>
                 </div>
             </form>
         </div>

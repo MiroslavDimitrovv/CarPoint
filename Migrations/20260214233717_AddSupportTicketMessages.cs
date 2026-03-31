@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace CarDealership.Migrations
+namespace CarPoint.Migrations
 {
     /// <inheritdoc />
     public partial class AddSupportTicketMessages : Migration

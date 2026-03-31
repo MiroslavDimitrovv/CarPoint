@@ -1,5 +1,5 @@
-using CarDealership.Data;
-using CarDealership.Models;
+using CarPoint.Data;
+using CarPoint.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
-namespace CarDealership.Areas.Identity.Pages.Account.Manage
+namespace CarPoint.Areas.Identity.Pages.Account.Manage
 {
     [Authorize]
     public class IndexModel : PageModel
@@ -31,21 +31,21 @@ namespace CarDealership.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            [Display(Name = "Имейл")]
+            [Display(Name = "РРјРµР№Р»")]
             public string Email { get; set; } = string.Empty;
 
             [Required]
-            [Display(Name = "Име")]
+            [Display(Name = "РРјРµ")]
             [StringLength(50, MinimumLength = 2)]
             public string FirstName { get; set; } = string.Empty;
 
             [Required]
-            [Display(Name = "Фамилия")]
+            [Display(Name = "Р¤Р°РјРёР»РёСЏ")]
             [StringLength(50, MinimumLength = 2)]
             public string LastName { get; set; } = string.Empty;
 
             [Required]
-            [Display(Name = "Телефон")]
+            [Display(Name = "РўРµР»РµС„РѕРЅ")]
             [Phone]
             public string PhoneNumber { get; set; } = string.Empty;
         }
@@ -99,7 +99,7 @@ namespace CarDealership.Areas.Identity.Pages.Account.Manage
 
             await _context.SaveChangesAsync();
 
-            StatusMessage = "Профилът е обновен успешно.";
+            StatusMessage = "РџСЂРѕС„РёР»СЉС‚ Рµ РѕР±РЅРѕРІРµРЅ СѓСЃРїРµС€РЅРѕ.";
             return RedirectToPage();
         }
     }

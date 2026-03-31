@@ -1,17 +1,15 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using CarDealership.Models;
+using CarPoint.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace CarDealership.Areas.Identity.Pages.Account
+namespace CarPoint.Areas.Identity.Pages.Account
 {
     public class LogoutModel : PageModel
     {
@@ -34,8 +32,6 @@ namespace CarDealership.Areas.Identity.Pages.Account
             }
             else
             {
-                // This needs to be a redirect so that the browser performs a new
-                // request and the identity for the user gets updated.
                 return RedirectToPage();
             }
         }

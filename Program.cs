@@ -1,7 +1,7 @@
 using System.Globalization;
-using CarDealership.Data;
-using CarDealership.Models;
-using CarDealership.Services.CarValuation;
+using CarPoint.Data;
+using CarPoint.Models;
+using CarPoint.Services.CarValuation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +11,21 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")?.Trim();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
+{
+    if (string.IsNullOrWhiteSpace(connectionString))
+    {
+        throw new InvalidOperationException("DefaultConnection is not configured.");
+    }
+
+    if (connectionString.Contains("Host=", StringComparison.OrdinalIgnoreCase) ||
+        connectionString.Contains("Username=", StringComparison.OrdinalIgnoreCase))
+    {
+        options.UseNpgsql(connectionString);
+        return;
+    }
+
+    options.UseSqlServer(connectionString);
+});
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
@@ -30,7 +44,7 @@ builder.Services.AddHttpClient<AutoDevCarValuationService>();
 builder.Services.AddScoped<ICarValuationService, AutoDevCarValuationService>();
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<CarDealership.Services.AdminEvents.IAdminEventLogger, CarDealership.Services.AdminEvents.AdminEventLogger>();
+builder.Services.AddScoped<CarPoint.Services.AdminEvents.IAdminEventLogger, CarPoint.Services.AdminEvents.AdminEventLogger>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -46,8 +60,17 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
+    if (app.Environment.IsDevelopment())
+    {
+        db.Database.EnsureCreated();
+    }
+    else
+    {
+        db.Database.Migrate();
+    }
 }
+
+await AppSeed.SeedAsync(app.Services);
 
 if (!app.Environment.IsDevelopment())
 {

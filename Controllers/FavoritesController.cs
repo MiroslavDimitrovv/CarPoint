@@ -1,11 +1,11 @@
-﻿using CarDealership.Data;
-using CarDealership.Models;
+using CarPoint.Data;
+using CarPoint.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace CarDealership.Controllers
+namespace CarPoint.Controllers
 {
     [Authorize]
     public class FavoritesController : Controller

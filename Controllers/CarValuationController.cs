@@ -1,8 +1,8 @@
-﻿using CarDealership.Models.ViewModels;
-using CarDealership.Services.CarValuation;
+using CarPoint.Models.ViewModels;
+using CarPoint.Services.CarValuation;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CarDealership.Controllers
+namespace CarPoint.Controllers
 {
     public class CarValuationController : Controller
     {

@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace CarDealership.Services.CarValuation
+namespace CarPoint.Services.CarValuation
 {
     public class CarValuationResult
     {

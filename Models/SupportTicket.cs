@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace CarDealership.Models
+namespace CarPoint.Models
 {
     public class SupportTicket
     {
@@ -37,25 +37,37 @@ namespace CarDealership.Models
 
     public enum TicketCategory
     {
+        [Display(Name = "Общи въпроси")]
         General = 0,
+        [Display(Name = "Акаунт")]
         Account = 1,
+        [Display(Name = "Наеми")]
         Rentals = 2,
+        [Display(Name = "Продажби")]
         Sales = 3,
+        [Display(Name = "Плащания")]
         Payments = 4,
+        [Display(Name = "Технически проблем")]
         Bug = 5
     }
 
     public enum TicketPriority
     {
+        [Display(Name = "Нисък")]
         Low = 0,
+        [Display(Name = "Нормален")]
         Normal = 1,
+        [Display(Name = "Висок")]
         High = 2
     }
 
     public enum TicketStatus
     {
+        [Display(Name = "Отворена")]
         Open = 0,
+        [Display(Name = "В процес")]
         InProgress = 1,
+        [Display(Name = "Затворена")]
         Closed = 2
     }
 }

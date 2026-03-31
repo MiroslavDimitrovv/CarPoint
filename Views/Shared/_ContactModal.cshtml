@@ -1,38 +1,25 @@
-﻿<div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-            <div class="modal-header">
-                <h5 class="modal-title">Свържи се с CarLand</h5>
+        <div class="modal-content contact-modal">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Свържи се с CarPoint</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Затвори"></button>
             </div>
-
-            <div class="modal-body">
-                <div class="d-flex align-items-start gap-3">
-                    <div>
-                        <div class="fw-semibold mb-1" id="contactModalTitle">Информация</div>
-
-                        <div class="text-muted" id="contactModalText">
-                            Заповядайте в нашия шоурум и се уверете
-                        </div>
-
-                        <hr class="my-3" />
-
-                        <div class="small text-muted">Контакти</div>
-                        <div class="d-flex flex-column gap-1 mt-1">
-                            <a class="text-decoration-none" href="tel:+359888123456" id="contactPhone">
-                                📞 +359 888 123 456
-                            </a>
-                            <div class="text-muted">
-                                📍 Русе, ул. Александровка № 23, Автокъща “CarLand”
-                            </div>
-                        </div>
+            <div class="modal-body pt-0">
+                <div class="contact-modal-panel">
+                    <div class="contact-modal-kicker" id="contactModalTitle">Консултация</div>
+                    <p class="contact-modal-copy" id="contactModalText">
+                        Кажи ни какво търсиш и ще ти помогнем с най-подходящата следваща стъпка.
+                    </p>
+                    <div class="contact-modal-meta">
+                        <a href="tel:+359888123456" id="contactPhone">+359 888 123 456</a>
+                        <span>Русе, ул. Александровска 23</span>
                     </div>
                 </div>
             </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Затвори</button>
-                <a class="btn btn-primary" href="tel:+359888123456">Обади се</a>
+            <div class="modal-footer border-0">
+                <button class="btn btn-brand-outline" data-bs-dismiss="modal">Затвори</button>
+                <a class="btn btn-brand" href="tel:+359888123456">Обади се</a>
             </div>
         </div>
     </div>
@@ -43,13 +30,8 @@
         const btn = e.target.closest("[data-contact-message]");
         if (!btn) return;
 
-        const message =
-            btn.getAttribute("data-contact-message") ||
-            "Заповядайте в нашия шоурум и се уверете";
-
-        const title =
-            btn.getAttribute("data-contact-title") ||
-            "Информация";
+        const message = btn.getAttribute("data-contact-message") || "Кажи ни какво търсиш и ще ти помогнем с най-подходящата следваща стъпка.";
+        const title = btn.getAttribute("data-contact-title") || "Консултация";
 
         document.getElementById("contactModalTitle").textContent = title;
         document.getElementById("contactModalText").textContent = message;

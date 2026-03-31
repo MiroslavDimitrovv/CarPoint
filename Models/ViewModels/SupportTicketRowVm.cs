@@ -1,6 +1,6 @@
-﻿using CarDealership.Models;
+using CarPoint.Models;
 
-namespace CarDealership.Models.ViewModels.Support
+namespace CarPoint.Models.ViewModels.Support
 {
     public class SupportTicketRowVm
     {

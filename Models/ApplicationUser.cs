@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 
-namespace CarDealership.Models
+namespace CarPoint.Models
 {
     public class ApplicationUser : IdentityUser
     {

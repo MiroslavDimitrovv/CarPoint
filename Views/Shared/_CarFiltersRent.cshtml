@@ -1,96 +1,94 @@
-﻿@model CarDealership.Models.ViewModels.CarFilterVm
-@using CarDealership.Models
+@model CarPoint.Models.ViewModels.CarFilterVm
+@using CarPoint.Models
 
-<form method="get" asp-controller="RentalsCatalog" asp-action="Index" class="vstack gap-3">
-
+<form method="get" asp-controller="RentalsCatalog" asp-action="Index" class="filter-form">
     <div>
         <label class="form-label">Търсене</label>
-        <input class="form-control" name="Q" value="@Model.Q" placeholder="Марка, модел, двигател..." />
+        <input class="form-control" name="Q" value="@Model.Q" placeholder="Марка, модел, двигател" />
+    </div>
+
+    <div>
+        <label class="form-label">Офис</label>
+        <select class="form-select" name="Office">
+            <option value="">Всички</option>
+            <option value="Ruse" selected="@(Model.Office == OfficeLocation.Ruse)">Офис Русе</option>
+            <option value="Burgas" selected="@(Model.Office == OfficeLocation.Burgas)">Офис Бургас</option>
+            <option value="Sofia" selected="@(Model.Office == OfficeLocation.Sofia)">Офис София</option>
+            <option value="Varna" selected="@(Model.Office == OfficeLocation.Varna)">Офис Варна</option>
+        </select>
+    </div>
+
+    <div>
+        <label class="form-label">Марка</label>
+        <select class="form-select" name="Brand">
+            <option value="">Всички</option>
+            @foreach (var b in Model.Brands)
+            {
+                <option value="@b" selected="@(Model.Brand == b)">@b</option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <label class="form-label">Гориво</label>
+        <select class="form-select" name="FuelType">
+            <option value="">Всички</option>
+            @foreach (var f in Model.FuelTypes)
+            {
+                <option value="@f" selected="@(Model.FuelType == f)">@f</option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <label class="form-label">Скоростна кутия</label>
+        <select class="form-select" name="Transmission">
+            <option value="">Всички</option>
+            @foreach (var t in Model.Transmissions)
+            {
+                <option value="@t" selected="@(Model.Transmission == t)">@t</option>
+            }
+        </select>
     </div>
 
     <div class="row g-2">
-        <div class="col-12">
-            <label class="form-label">Офис</label>
-            <select class="form-select" name="Office">
-                <option value="">Всички</option>
-                <option value="Ruse" selected="@(Model.Office == OfficeLocation.Ruse)">Офис Русе</option>
-                <option value="Burgas" selected="@(Model.Office == OfficeLocation.Burgas)">Офис Бургас</option>
-                <option value="Sofia" selected="@(Model.Office == OfficeLocation.Sofia)">Офис София</option>
-                <option value="Varna" selected="@(Model.Office == OfficeLocation.Varna)">Офис Варна</option>
-            </select>
-        </div>
-
-        <div class="col-12">
-            <label class="form-label">Марка</label>
-            <select class="form-select" name="Brand">
-                <option value="">(всички)</option>
-                @foreach (var b in Model.Brands)
-                {
-                    <option value="@b" selected="@(Model.Brand == b)">@b</option>
-                }
-            </select>
-        </div>
-
-        <div class="col-12">
-            <label class="form-label">Гориво</label>
-            <select class="form-select" name="FuelType">
-                <option value="">(всички)</option>
-                @foreach (var f in Model.FuelTypes)
-                {
-                    <option value="@f" selected="@(Model.FuelType == f)">@f</option>
-                }
-            </select>
-        </div>
-
-        <div class="col-12">
-            <label class="form-label">Скоростна кутия</label>
-            <select class="form-select" name="Transmission">
-                <option value="">(всички)</option>
-                @foreach (var t in Model.Transmissions)
-                {
-                    <option value="@t" selected="@(Model.Transmission == t)">@t</option>
-                }
-            </select>
-        </div>
-
-        <div class="col-6">
+        <div class="col">
             <label class="form-label">Година от</label>
             <input class="form-control" type="number" name="YearFrom" value="@Model.YearFrom" />
         </div>
-        <div class="col-6">
+        <div class="col">
             <label class="form-label">Година до</label>
             <input class="form-control" type="number" name="YearTo" value="@Model.YearTo" />
         </div>
+    </div>
 
-        <div class="col-12">
-            <label class="form-label">Километри до</label>
-            <input class="form-control" type="number" name="MileageTo" value="@Model.MileageTo" />
-        </div>
+    <div>
+        <label class="form-label">Километри до</label>
+        <input class="form-control" type="number" name="MileageTo" value="@Model.MileageTo" />
+    </div>
 
-        <div class="col-6">
-            <label class="form-label">Цена/ден от (€)</label>
-            <input class="form-control" type="number" step="1" name="PriceFrom" value="@Model.PriceFrom" />
+    <div class="row g-2">
+        <div class="col">
+            <label class="form-label">Цена от (€)</label>
+            <input class="form-control" type="number" name="PriceFrom" value="@Model.PriceFrom" />
         </div>
-        <div class="col-6">
-            <label class="form-label">Цена/ден до (€)</label>
-            <input class="form-control" type="number" step="1" name="PriceTo" value="@Model.PriceTo" />
+        <div class="col">
+            <label class="form-label">Цена до (€)</label>
+            <input class="form-control" type="number" name="PriceTo" value="@Model.PriceTo" />
         </div>
+    </div>
 
-        <div class="col-6">
-            <label class="form-label">К.с. от</label>
+    <div class="row g-2">
+        <div class="col">
+            <label class="form-label">Коне от</label>
             <input class="form-control" type="number" name="HorsePowerFrom" value="@Model.HorsePowerFrom" />
         </div>
-        <div class="col-6">
-            <label class="form-label">К.с. до</label>
+        <div class="col">
+            <label class="form-label">Коне до</label>
             <input class="form-control" type="number" name="HorsePowerTo" value="@Model.HorsePowerTo" />
         </div>
     </div>
 
-    <div class="d-grid gap-2">
-        <button class="btn btn-primary" type="submit">Покажи</button>
-
-        <a class="btn btn-outline-secondary" asp-controller="RentalsCatalog" asp-action="Index">
-            Изчисти филтрите
-        </a>
-    </div>
+    <button class="btn btn-brand w-100" type="submit">Покажи</button>
+    <a class="btn btn-brand-outline w-100" asp-controller="RentalsCatalog" asp-action="Index">Изчисти</a>
 </form>

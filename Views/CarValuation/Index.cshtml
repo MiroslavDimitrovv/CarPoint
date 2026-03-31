@@ -1,187 +1,143 @@
-﻿@model CarDealership.Models.ViewModels.CarValuationVm
+@model CarPoint.Models.ViewModels.CarValuationVm
 
 @{
-    ViewData["Title"] = "Оценка на автомобил";
+    ViewData["Title"] = "Оценка";
 }
 
-<div class="container py-4">
-    <h1 class="h4 mb-3">Оценка на автомобил</h1>
-
-    <form id="valuationForm"
-          asp-area=""
-          asp-controller="CarValuation"
-          asp-action="Index"
-          method="post"
-          autocomplete="off"
-          novalidate
-          class="row g-3">
-
-        @Html.AntiForgeryToken()
-
-        <input type="text" name="fake-user" autocomplete="username" style="display:none" />
-        <input type="password" name="fake-pass" autocomplete="new-password" style="display:none" />
-
-        <div class="col-md-6">
-            <label class="form-label">Марка</label>
-            <input asp-for="Brand"
-                   class="form-control"
-                   autocomplete="new-password"
-                   autocorrect="off"
-                   spellcheck="false" />
-            <span asp-validation-for="Brand" class="text-danger"></span>
+<section class="valuation-page">
+    <div class="catalog-header">
+        <div>
+            <span class="section-label">Оценка</span>
+            <h1>Оцени автомобила си</h1>
+            <p>Попълни основните данни и получи ориентировъчна пазарна стойност.</p>
         </div>
-
-        <div class="col-md-6">
-            <label class="form-label">Модел</label>
-            <input asp-for="Model"
-                   class="form-control"
-                   autocomplete="new-password"
-                   autocorrect="off"
-                   spellcheck="false" />
-            <span asp-validation-for="Model" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-3">
-            <label class="form-label">Година</label>
-            <input asp-for="Year"
-                   type="number"
-                   min="1990"
-                   max="2100"
-                   class="form-control"
-                   autocomplete="off"
-                   inputmode="numeric" />
-            <span asp-validation-for="Year" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-3">
-            <label class="form-label">Километраж (km)</label>
-            <input asp-for="Mileage"
-                   type="number"
-                   min="0"
-                   max="1000000"
-                   class="form-control"
-                   autocomplete="off"
-                   inputmode="numeric" />
-            <span asp-validation-for="Mileage" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-3">
-            <label class="form-label">Гориво</label>
-            <select asp-for="FuelType" class="form-select" autocomplete="off">
-                <option value="">-- избери --</option>
-                <option value="Petrol">Бензин</option>
-                <option value="Diesel">Дизел</option>
-                <option value="Hybrid">Хибрид</option>
-                <option value="Electric">Електрическа</option>
-            </select>
-            <span asp-validation-for="FuelType" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-3">
-            <label class="form-label">Скоростна кутия</label>
-            <select asp-for="Transmission" class="form-select" autocomplete="off">
-                <option value="">-- избери --</option>
-                <option value="Manual">Ръчна</option>
-                <option value="Automatic">Автоматична</option>
-            </select>
-            <span asp-validation-for="Transmission" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-6">
-            <label class="form-label">Двигател</label>
-            <input asp-for="Engine"
-                   class="form-control"
-                   autocomplete="new-password"
-                   autocorrect="off"
-                   spellcheck="false"
-                   placeholder="Например: 2.0 TSI" />
-            <span asp-validation-for="Engine" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-3">
-            <label class="form-label">Мощност (к.с.)</label>
-            <input asp-for="HorsePower"
-                   type="number"
-                   min="30"
-                   max="1500"
-                   class="form-control"
-                   autocomplete="off"
-                   inputmode="numeric"
-                   placeholder="Напр. 195" />
-            <span asp-validation-for="HorsePower" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-3">
-            <label class="form-label">Тип купе</label>
-            <select asp-for="BodyType" class="form-select" autocomplete="off">
-                <option value="">-- избери --</option>
-                <option value="Sedan">Седан</option>
-                <option value="Hatchback">Хечбек</option>
-                <option value="Wagon">Комби</option>
-                <option value="SUV">SUV / Джип</option>
-                <option value="Coupe">Купе</option>
-                <option value="Convertible">Кабриолет</option>
-            </select>
-            <span asp-validation-for="BodyType" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-3">
-            <label class="form-label">Състояние</label>
-            <select asp-for="Condition" class="form-select" autocomplete="off">
-                <option value="Excellent">Отлично</option>
-                <option value="Good" selected>Добро</option>
-                <option value="Average">Средно</option>
-                <option value="Poor">Лошо</option>
-            </select>
-            <span asp-validation-for="Condition" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-3">
-            <label class="form-label">Катастрофирала</label>
-            <select asp-for="HadAccident" class="form-select" autocomplete="off">
-                <option value="false">Не</option>
-                <option value="true">Да</option>
-            </select>
-        </div>
-
-        <div class="col-md-3">
-            <label class="form-label">Брой собственици</label>
-            <input asp-for="OwnersCount"
-                   type="number"
-                   min="1"
-                   max="10"
-                   class="form-control"
-                   autocomplete="off"
-                   inputmode="numeric" />
-            <span asp-validation-for="OwnersCount" class="text-danger"></span>
-        </div>
-
-        <div class="col-12 pt-2">
-            <button id="submitBtn" type="submit" class="btn btn-primary">
-                Изчисли оценка
-            </button>
-        </div>
-    </form>
-
-    <div id="loadingBox" class="alert alert-info mt-4 d-none">
-        Извършва се проверка... Моля, изчакайте.
     </div>
 
-    @if (!string.IsNullOrWhiteSpace(Model?.ErrorMessage))
-    {
-        <div class="alert alert-warning mt-4">
-            @Model.ErrorMessage
-        </div>
-    }
+    <div class="valuation-layout">
+        <aside class="valuation-info">
+            <h2>Какво е важно</h2>
+            <ul>
+                <li>Марка, модел и година</li>
+                <li>Пробег, гориво и трансмисия</li>
+                <li>Състояние и история на автомобила</li>
+            </ul>
+            <p>Резултатът е ориентировъчен и е подходящ за първоначална преценка.</p>
+        </aside>
 
-    @if (Model?.IsCalculated == true)
-    {
-        <div class="alert alert-success mt-4 text-center">
-            Очаквана пазарна стойност:
-            <div class="h4 mt-2">@Model.EstimatedPrice @Model.Currency</div>
+        <div class="valuation-form-wrap">
+            <form id="valuationForm" asp-area="" asp-controller="CarValuation" asp-action="Index" method="post" autocomplete="off" novalidate class="row g-3">
+                @Html.AntiForgeryToken()
+                <input type="text" name="fake-user" autocomplete="username" class="d-none" />
+                <input type="password" name="fake-pass" autocomplete="new-password" class="d-none" />
+
+                <div class="col-md-6">
+                    <label class="form-label">Марка</label>
+                    <input asp-for="Brand" class="form-control" />
+                    <span asp-validation-for="Brand" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Модел</label>
+                    <input asp-for="Model" class="form-control" />
+                    <span asp-validation-for="Model" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Година</label>
+                    <input asp-for="Year" type="number" min="1990" max="2100" class="form-control" />
+                    <span asp-validation-for="Year" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Километраж</label>
+                    <input asp-for="Mileage" type="number" min="0" class="form-control" />
+                    <span asp-validation-for="Mileage" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Гориво</label>
+                    <select asp-for="FuelType" class="form-select">
+                        <option value="">Избери</option>
+                        <option value="Petrol">Бензин</option>
+                        <option value="Diesel">Дизел</option>
+                        <option value="Hybrid">Хибрид</option>
+                        <option value="Electric">Електрически</option>
+                    </select>
+                    <span asp-validation-for="FuelType" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Скоростна кутия</label>
+                    <select asp-for="Transmission" class="form-select">
+                        <option value="">Избери</option>
+                        <option value="Manual">Ръчна</option>
+                        <option value="Automatic">Автоматична</option>
+                    </select>
+                    <span asp-validation-for="Transmission" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Двигател</label>
+                    <input asp-for="Engine" class="form-control" placeholder="Например 2.0 TSI" />
+                    <span asp-validation-for="Engine" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Мощност</label>
+                    <input asp-for="HorsePower" type="number" min="30" class="form-control" />
+                    <span asp-validation-for="HorsePower" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Тип купе</label>
+                    <select asp-for="BodyType" class="form-select">
+                        <option value="">Избери</option>
+                        <option value="Sedan">Седан</option>
+                        <option value="Hatchback">Хечбек</option>
+                        <option value="Wagon">Комби</option>
+                        <option value="SUV">SUV</option>
+                        <option value="Coupe">Купе</option>
+                        <option value="Convertible">Кабриолет</option>
+                    </select>
+                    <span asp-validation-for="BodyType" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Състояние</label>
+                    <select asp-for="Condition" class="form-select">
+                        <option value="Excellent">Отлично</option>
+                        <option value="Good">Добро</option>
+                        <option value="Average">Средно</option>
+                        <option value="Poor">Лошо</option>
+                    </select>
+                    <span asp-validation-for="Condition" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Катастрофирал</label>
+                    <select asp-for="HadAccident" class="form-select">
+                        <option value="false">Не</option>
+                        <option value="true">Да</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Собственици</label>
+                    <input asp-for="OwnersCount" type="number" min="1" max="10" class="form-control" />
+                    <span asp-validation-for="OwnersCount" class="text-danger"></span>
+                </div>
+                <div class="col-12">
+                    <button id="submitBtn" type="submit" class="btn btn-brand">Изчисли оценка</button>
+                </div>
+            </form>
+
+            <div id="loadingBox" class="alert alert-info mt-4 d-none">Изчисляваме ориентировъчната стойност. Моля, изчакай.</div>
+
+            @if (!string.IsNullOrWhiteSpace(Model?.ErrorMessage))
+            {
+                <div class="alert alert-warning mt-4">@Model.ErrorMessage</div>
+            }
+
+            @if (Model?.IsCalculated == true)
+            {
+                <div class="valuation-result mt-4">
+                    <span class="section-label">Резултат</span>
+                    <h2>Очаквана пазарна стойност</h2>
+                    <div class="valuation-price">@Model.EstimatedPrice @Model.Currency</div>
+                </div>
+            }
         </div>
-    }
-</div>
+    </div>
+</section>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
@@ -192,38 +148,10 @@
             const loadingBox = document.getElementById('loadingBox');
             const submitBtn = document.getElementById('submitBtn');
 
-            function hasEmptyRequired() {
-                const requiredFields = form.querySelectorAll('[data-val-required]');
-                for (const el of requiredFields) {
-                    if (el.tagName === 'SELECT') {
-                        if (!el.value || el.value.trim() === '') return true;
-                    } else {
-                        if (!el.value || el.value.trim() === '') return true;
-                    }
-                }
-                return false;
-            }
-
-            form.addEventListener('submit', function (e) {
-                if (hasEmptyRequired()) {
-                    return;
-                }
-
-                setTimeout(function () {
-                    const hasErrors = form.querySelectorAll('.input-validation-error').length > 0;
-
-                    if (hasErrors) {
-                        loadingBox.classList.add('d-none');
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = 'Изчисли оценка';
-                        e.preventDefault();
-                        return;
-                    }
-
-                    loadingBox.classList.remove('d-none');
-                    submitBtn.disabled = true;
-                    submitBtn.textContent = 'Проверка...';
-                }, 0);
+            form.addEventListener('submit', function () {
+                loadingBox.classList.remove('d-none');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Проверка...';
             });
 
             form.addEventListener('input', function () {
@@ -234,4 +162,3 @@
         })();
     </script>
 }
-

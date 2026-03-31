@@ -1,12 +1,12 @@
-﻿using CarDealership.Data;
-using CarDealership.Models;
-using CarDealership.Services.AdminEvents;
+using CarPoint.Data;
+using CarPoint.Models;
+using CarPoint.Services.AdminEvents;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace CarDealership.Controllers
+namespace CarPoint.Controllers
 {
     [Authorize]
     public class RentalsController : Controller

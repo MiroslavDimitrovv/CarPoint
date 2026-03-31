@@ -1,9 +1,9 @@
-﻿using CarDealership.Data;
-using CarDealership.Models;
+using CarPoint.Data;
+using CarPoint.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
-namespace CarDealership.Services.AdminEvents
+namespace CarPoint.Services.AdminEvents
 {
     public class AdminEventLogger : IAdminEventLogger
     {

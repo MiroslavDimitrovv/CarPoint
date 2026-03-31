@@ -1,26 +1,26 @@
-﻿@model CarDealership.Models.ViewModels.Support.AdminSupportDetailsVm
-@using CarDealership.Models
+@model CarPoint.Models.ViewModels.Support.AdminSupportDetailsVm
+@using CarPoint.Models
 
 @{
-    ViewData["Title"] = $"Тикет #{Model.Id}";
-
-    var msgs = ViewBag.Messages as List<SupportTicketMessage> ?? new();
+    ViewData["Title"] = $"Заявка #{Model.Id}";
+    var messages = ViewBag.Messages as List<SupportTicketMessage> ?? new();
 }
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
-            <h1 class="h4 m-0">Тикет #@Model.Id</h1>
-            <div class="text-muted small">Създаден: @Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</div>
+            <h1 class="h4 m-0">Заявка #@Model.Id</h1>
+            <div class="text-muted small">Създадена: @Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</div>
         </div>
 
-        <a class="btn btn-outline-secondary" asp-action="Index">← Назад</a>
+        <a class="btn btn-outline-secondary" asp-action="Index">Назад</a>
     </div>
 
     @if (TempData["Success"] != null)
     {
         <div class="alert alert-success">@TempData["Success"]</div>
     }
+
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger">@TempData["Error"]</div>
@@ -34,26 +34,26 @@
                     <div class="mb-3">@Model.Subject</div>
 
                     <div class="fw-semibold mb-1">Описание</div>
-                    <div class="border rounded p-3 bg-light" style="white-space:pre-wrap">@Model.Description</div>
+                    <div class="border rounded p-3 bg-light" style="white-space: pre-wrap;">@Model.Description</div>
 
                     <hr />
-                    <h5 class="mb-3">Разговор</h5>
+                    <h5 class="mb-3">Съобщения</h5>
 
-                    @if (!msgs.Any())
+                    @if (!messages.Any())
                     {
-                        <div class="text-muted">Няма съобщения.</div>
+                        <div class="text-muted">Все още няма съобщения по тази заявка.</div>
                     }
                     else
                     {
                         <div class="vstack gap-2">
-                            @foreach (var m in msgs)
+                            @foreach (var message in messages)
                             {
-                                <div class="border rounded p-3 @(m.IsAdmin ? "bg-light" : "")">
+                                <div class="border rounded p-3 @(message.IsAdmin ? "bg-light" : "")">
                                     <div class="small text-muted d-flex justify-content-between">
-                                        <span>@(m.IsAdmin ? "Админ" : "Потребител")</span>
-                                        <span>@m.CreatedAt.ToString("dd.MM.yyyy HH:mm")</span>
+                                        <span>@(message.IsAdmin ? "Администратор" : "Клиент")</span>
+                                        <span>@message.CreatedAt.ToString("dd.MM.yyyy HH:mm")</span>
                                     </div>
-                                    <div style="white-space:pre-wrap">@m.Message</div>
+                                    <div style="white-space: pre-wrap;">@message.Message</div>
                                 </div>
                             }
                         </div>
@@ -64,18 +64,10 @@
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="id" value="@Model.Id" />
 
-                        <label class="form-label">Отговор (админ)</label>
+                        <label class="form-label">Отговор от администратора</label>
                         <textarea class="form-control" name="message" rows="4" placeholder="Напиши отговор..." required></textarea>
-
                         <button class="btn btn-primary mt-2" type="submit">Изпрати отговор</button>
                     </form>
-
-                    <hr />
-                    <div class="small text-muted">
-                        Категория: <strong>@Model.Category</strong> •
-                        Приоритет: <strong>@Model.Priority</strong> •
-                        Статус: <strong>@Model.Status</strong>
-                    </div>
                 </div>
             </div>
         </div>
@@ -83,8 +75,8 @@
         <div class="col-12 col-lg-5">
             <div class="card shadow-sm mb-3">
                 <div class="card-body">
-                    <div class="fw-semibold mb-2">Потребител</div>
-                    <div><strong>Email:</strong> @Model.Email</div>
+                    <div class="fw-semibold mb-2">Подател</div>
+                    <div><strong>Имейл:</strong> @Model.Email</div>
                     <div><strong>Име:</strong> @(Model.FullName ?? "(без име)")</div>
                     <div><strong>Телефон:</strong> @(Model.PhoneNumber ?? "(няма телефон)")</div>
                     <div class="text-muted small mt-2">UserId: @Model.UserId</div>
@@ -93,7 +85,7 @@
 
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <div class="fw-semibold mb-2">Админ управление</div>
+                    <div class="fw-semibold mb-2">Управление</div>
 
                     <form asp-action="Update" method="post" class="vstack gap-2">
                         @Html.AntiForgeryToken()
@@ -101,18 +93,16 @@
 
                         <div>
                             <label class="form-label">Статус</label>
-                            <select class="form-select" asp-for="NewStatus"
-                                    asp-items="Html.GetEnumSelectList<TicketStatus>()"></select>
+                            <select class="form-select" asp-for="NewStatus" asp-items="Html.GetEnumSelectList<TicketStatus>()"></select>
                         </div>
 
                         <div>
                             <label class="form-label">Приоритет</label>
-                            <select class="form-select" asp-for="NewPriority"
-                                    asp-items="Html.GetEnumSelectList<TicketPriority>()"></select>
+                            <select class="form-select" asp-for="NewPriority" asp-items="Html.GetEnumSelectList<TicketPriority>()"></select>
                         </div>
 
                         <div>
-                            <label class="form-label">Вътрешна бележка (само админ)</label>
+                            <label class="form-label">Вътрешна бележка</label>
                             <textarea class="form-control" asp-for="NewAdminNote" rows="5"></textarea>
                         </div>
 
@@ -121,11 +111,10 @@
 
                     <hr />
 
-                    <form asp-action="Delete" method="post"
-                          onsubmit="return confirm('Сигурен ли си, че искаш да изтриеш тикета?');">
+                    <form asp-action="Delete" method="post" onsubmit="return confirm('Сигурен ли си, че искаш да изтриеш заявката?');">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="id" value="@Model.Id" />
-                        <button class="btn btn-outline-danger w-100" type="submit">Изтрий тикета</button>
+                        <button class="btn btn-outline-danger w-100" type="submit">Изтрий заявката</button>
                     </form>
                 </div>
             </div>

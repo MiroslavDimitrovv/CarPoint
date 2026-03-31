@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CarDealership.Migrations
+namespace CarPoint.Migrations
 {
     /// <inheritdoc />
     public partial class AddIsPaidToRentals : Migration

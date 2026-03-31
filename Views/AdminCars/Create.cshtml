@@ -1,4 +1,4 @@
-﻿@model CarDealership.Models.Car
+@model CarPoint.Models.Car
 @{
     ViewData["Title"] = "Нова обява";
 }
@@ -59,7 +59,7 @@
 
         <div class="col-md-4">
             <label class="form-label">Тип обява</label>
-            <select asp-for="Type" class="form-select" asp-items="Html.GetEnumSelectList<CarDealership.Models.Car.ListingType>()"></select>
+            <select asp-for="Type" class="form-select" asp-items="Html.GetEnumSelectList<CarPoint.Models.Car.ListingType>()"></select>
             <span asp-validation-for="Type" class="text-danger"></span>
         </div>
 
@@ -77,7 +77,7 @@
 
         <div class="col-md-4">
             <label class="form-label">Статус</label>
-            <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<CarDealership.Models.Car.StatusType>()"></select>
+            <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<CarPoint.Models.Car.StatusType>()"></select>
             <span asp-validation-for="Status" class="text-danger"></span>
         </div>
         <div class="mb-3">

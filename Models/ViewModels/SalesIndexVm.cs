@@ -1,6 +1,6 @@
-﻿using CarDealership.Models;
+using CarPoint.Models;
 
-namespace CarDealership.Models.ViewModels
+namespace CarPoint.Models.ViewModels
 {
     public class SalesIndexVm
     {

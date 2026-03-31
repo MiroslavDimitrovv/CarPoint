@@ -1,4 +1,4 @@
-﻿namespace CarDealership.Services.CarValuation
+namespace CarPoint.Services.CarValuation
 {
     public class CarValuationRequest
     {

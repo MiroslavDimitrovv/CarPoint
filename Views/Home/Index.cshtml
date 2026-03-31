@@ -1,162 +1,64 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Начало";
 }
 
-<div class="container py-4 py-md-5">
-
-    <!-- HERO -->
-    <div class="row align-items-center g-4 mb-4 mb-md-5">
-        <div class="col-12 col-lg-7">
-            <span class="badge text-bg-dark mb-3">Лесният начин</span>
-
-            <h1 class="display-5 fw-bold lh-1 mb-3">
-                Покупка или наем — избери най-удобния вариант
-            </h1>
-
-            <p class="lead text-muted mb-4">
-                Една платформа, два начина да вземеш автомобил. Бързо, ясно и без излишни стъпки.
-            </p>
-
-            <div class="d-flex flex-wrap gap-2">
-                <a class="btn btn-primary btn-lg px-4" asp-controller="Sales" asp-action="Index">
-                    Към покупка
-                </a>
-                <a class="btn btn-outline-secondary btn-lg px-4" asp-controller="RentalsCatalog" asp-action="Index">
-                    Към наем
-                </a>
-            </div>
-
-            <div class="d-flex flex-wrap gap-3 gap-md-4 mt-4 text-muted small">
-                <div class="d-flex align-items-center gap-2">
-                    <span class="badge rounded-pill text-bg-light border">✓</span>
-                    Ясни условия
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                    <span class="badge rounded-pill text-bg-light border">✓</span>
-                    Бърза заявка
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                    <span class="badge rounded-pill text-bg-light border">✓</span>
-                    Поддръжка
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-lg-5">
-            <div class="card border-0 shadow-sm overflow-hidden">
-                <div class="card-body p-0">
-                    <div class="p-4 p-md-5 bg-light">
-                        <h2 class="h5 fw-semibold mb-2">Бърз старт</h2>
-                        <p class="text-muted mb-4">
-                            Избери услуга и следвай стъпките. Ние ще помогнем при всеки етап.
-                        </p>
-
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <div class="p-3 rounded-4 bg-white border">
-                                    <div class="fw-semibold">1) Избираш</div>
-                                    <div class="text-muted small">Покупка или наем според нуждите ти.</div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="p-3 rounded-4 bg-white border">
-                                    <div class="fw-semibold">2) Заявяваш</div>
-                                    <div class="text-muted small">Кратка форма/контакт — без излишни полета.</div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="p-3 rounded-4 bg-white border">
-                                    <div class="fw-semibold">3) Потвърждаваме</div>
-                                    <div class="text-muted small">Обаждане/имейл с детайли и условия.</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="px-4 py-3 border-top bg-white d-flex justify-content-between align-items-center">
-                        <span class="text-muted small">Без скрити такси • Прозрачни условия</span>
-                        <a class="btn btn-sm btn-outline-dark" href="#how">
-                            Как работи
-                        </a>
-                    </div>
-                </div>
-            </div>
+<section class="hero">
+    <div class="hero-main">
+        <span class="section-label">CarPoint</span>
+        <h1>Намери автомобил за покупка или наем на едно място.</h1>
+        <p class="hero-lead">
+            В CarPoint можеш да разгледаш налични автомобили за продажба, да провериш
+            актуални предложения под наем и да направиш ориентировъчна оценка на своя автомобил.
+        </p>
+        <div class="hero-actions">
+            <a class="btn btn-brand" asp-controller="Sales" asp-action="Index">Към каталога</a>
+            <a class="btn btn-brand-outline" asp-controller="RentalsCatalog" asp-action="Index">Автомобили под наем</a>
         </div>
     </div>
 
-    <!-- HOW IT WORKS -->
-    <div id="how" class="mb-4 mb-md-5">
-        <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
-            <div>
-                <h2 class="h3 fw-bold mb-1">Как работи</h2>
-                <div class="text-muted">Минимални стъпки, максимална яснота.</div>
+    <aside class="hero-panel">
+        <h2>Услуги</h2>
+        <div class="hero-list">
+            <div class="hero-list-item">
+                <strong>Покупка на автомобил</strong>
+                <span>Разгледай налични модели, филтрирай по марка, цена, година и гориво.</span>
             </div>
-            <div class="text-muted small">Покупка • Наем</div>
+            <div class="hero-list-item">
+                <strong>Наем на автомобил</strong>
+                <span>Провери наличност по офис и виж цената на ден преди да резервираш.</span>
+            </div>
+            <div class="hero-list-item">
+                <strong>Оценка на автомобил</strong>
+                <span>Попълни данните за автомобила си и получи ориентировъчна пазарна стойност.</span>
+            </div>
         </div>
+    </aside>
+</section>
 
-        <div class="row g-3 g-md-4">
-            <div class="col-12 col-md-4">
-                <div class="p-4 rounded-4 border bg-light h-100">
-                    <div class="fw-semibold mb-1">Избери услуга</div>
-                    <div class="text-muted">
-                        Реши дали ти е по-изгодно да купиш или да наемеш според периода.
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-4">
-                <div class="p-4 rounded-4 border bg-light h-100">
-                    <div class="fw-semibold mb-1">Подай заявка</div>
-                    <div class="text-muted">
-                        Свързваме се с теб за детайли и уточняваме условията.
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-4">
-                <div class="p-4 rounded-4 border bg-light h-100">
-                    <div class="fw-semibold mb-1">Финализирай</div>
-                    <div class="text-muted">
-                        Подписване и получаване — бързо и подредено.
-                    </div>
-                </div>
-            </div>
-        </div>
+<section class="simple-grid">
+    <article class="simple-card">
+        <h3>Проверени предложения</h3>
+        <p>Всеки автомобил е показан с основна информация, снимка, цена и технически характеристики.</p>
+    </article>
+    <article class="simple-card">
+        <h3>Ясни условия за наем</h3>
+        <p>Виж от кой офис е автомобилът, колко струва на ден и какви са основните му параметри.</p>
+    </article>
+    <article class="simple-card">
+        <h3>Бърза връзка с екипа</h3>
+        <p>При въпрос за покупка, наем или оценка можеш да се свържеш с нас директно през сайта.</p>
+    </article>
+</section>
+
+<section class="cta-strip">
+    <div>
+        <span class="section-label">Удобно и бързо</span>
+        <h2>Избери автомобил, изпрати запитване и продължи напред без излишни стъпки.</h2>
     </div>
-
-    <!-- WHY US -->
-    <div class="card border-0 shadow-sm">
-        <div class="card-body p-4 p-md-5">
-            <div class="row g-4 align-items-center">
-                <div class="col-12 col-lg-4">
-                    <h2 class="h3 fw-bold mb-2">Защо нас</h2>
-                    <p class="text-muted mb-0">
-                        Държим на ясни правила и удобен процес — без “изненади”.
-                    </p>
-                </div>
-
-                <div class="col-12 col-lg-8">
-                    <div class="row g-3">
-                        <div class="col-12 col-md-4">
-                            <div class="p-3 rounded-4 border bg-light h-100">
-                                <div class="fw-semibold mb-1">Прозрачност</div>
-                                <div class="text-muted small">Всичко е описано с разбираем език.</div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-4">
-                            <div class="p-3 rounded-4 border bg-light h-100">
-                                <div class="fw-semibold mb-1">Бърза комуникация</div>
-                                <div class="text-muted small">Получаваш отговор без чакане.</div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-4">
-                            <div class="p-3 rounded-4 border bg-light h-100">
-                                <div class="fw-semibold mb-1">Сигурност</div>
-                                <div class="text-muted small">Подреден процес и ясни условия.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="cta-strip-actions">
+        <a class="btn btn-brand" asp-controller="CarValuation" asp-action="Index">Оцени автомобил</a>
+        <button type="button" class="btn btn-brand-outline" data-contact-title="Свържи се с CarPoint" data-contact-message="Изпрати ни запитване и ще ти помогнем с покупка, наем или оценка на автомобил.">
+            Изпрати запитване
+        </button>
     </div>
-
-</div>
+</section>

@@ -1,6 +1,6 @@
-﻿using CarDealership.Models;
+using CarPoint.Models;
 
-namespace CarDealership.Services.AdminEvents
+namespace CarPoint.Services.AdminEvents
 {
     public interface IAdminEventLogger
     {

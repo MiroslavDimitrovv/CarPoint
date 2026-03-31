@@ -1,14 +1,14 @@
-﻿using CarDealership.Data;
-using CarDealership.Models;
-using CarDealership.Models.ViewModels;
-using CarDealership.Services.AdminEvents;
+using CarPoint.Data;
+using CarPoint.Models;
+using CarPoint.Models.ViewModels;
+using CarPoint.Services.AdminEvents;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
-namespace CarDealership.Controllers
+namespace CarPoint.Controllers
 {
     public class RentalsCatalogController : Controller
     {

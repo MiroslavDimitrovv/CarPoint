@@ -1,10 +1,10 @@
-﻿using CarDealership.Data;
-using CarDealership.Models;
-using CarDealership.Models.ViewModels;
+using CarPoint.Data;
+using CarPoint.Models;
+using CarPoint.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace CarDealership.Controllers
+namespace CarPoint.Controllers
 {
     public class SalesController : Controller
     {

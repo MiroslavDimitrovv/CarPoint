@@ -1,8 +1,8 @@
-﻿using CarDealership.Models;
+using CarPoint.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace CarDealership.Data
+namespace CarPoint.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -16,9 +16,9 @@ namespace CarDealership.Data
         public DbSet<Rental> Rentals => Set<Rental>();
         public DbSet<Sale> Sales => Set<Sale>();
         public DbSet<Favorite> Favorites => Set<Favorite>();
-        public DbSet<CarDealership.Models.AdminEvent> AdminEvents { get; set; } = default!;
-        public DbSet<CarDealership.Models.SupportTicket> SupportTickets { get; set; } = default!;
-        public DbSet<CarDealership.Models.SupportTicketMessage> SupportTicketMessages { get; set; } = default!;
+        public DbSet<CarPoint.Models.AdminEvent> AdminEvents { get; set; } = default!;
+        public DbSet<CarPoint.Models.SupportTicket> SupportTickets { get; set; } = default!;
+        public DbSet<CarPoint.Models.SupportTicketMessage> SupportTicketMessages { get; set; } = default!;
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

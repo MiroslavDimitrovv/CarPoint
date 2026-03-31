@@ -1,90 +1,69 @@
-﻿@model CarDealership.Models.ViewModels.SalesIndexVm
+@model CarPoint.Models.ViewModels.SalesIndexVm
 @{
-    ViewData["Title"] = "Продажба";
+    ViewData["Title"] = "Каталог";
 }
 
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h4 m-0">Коли за продажба</h1>
-
-        <button class="btn btn-outline-primary d-md-none" type="button"
-                data-bs-toggle="offcanvas" data-bs-target="#filtersCanvasSale">
-            Филтри
-        </button>
+<section class="catalog-header">
+    <div>
+        <span class="section-label">Покупка</span>
+        <h1>Автомобили за продажба</h1>
+        <p>Разгледай наличните предложения и филтрирай според бюджета и предпочитанията си.</p>
     </div>
+    <div class="catalog-summary">
+        <strong>@Model.Cars.Count</strong>
+        <span>налични предложения</span>
+        <button class="btn btn-brand-outline d-md-none mt-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#filtersCanvasSale">Филтри</button>
+    </div>
+</section>
 
-    <div class="row">
-        <div class="col-md-3 d-none d-md-block">
+<section class="catalog-layout">
+    <aside class="catalog-sidebar d-none d-md-block">
+        <div class="sidebar-card">
+            <h2>Филтри</h2>
             @await Html.PartialAsync("_CarFiltersSale", Model.Filter)
         </div>
+    </aside>
 
-        <div class="col-12 col-md-9">
-            <div class="text-muted mb-2">Намерени: @Model.Cars.Count</div>
-
-            <div class="row g-3">
-                @foreach (var c in Model.Cars)
-                {
-                    <div class="col-12 col-lg-6">
-                        <div class="card h-100 shadow-sm">
-
-                            <div class="p-2 pb-0">
-                                <img src="~/images/cars/@(c.ImageFileName ?? "placeholder.jpg")"
-                                     class="w-100 rounded"
-                                     style="height:200px; object-fit:cover;"
-                                     alt="@c.Brand @c.Model" />
+    <div class="catalog-content">
+        <div class="listing-grid">
+            @foreach (var c in Model.Cars)
+            {
+                <article class="car-card">
+                    <img src="~/images/cars/@(c.ImageFileName ?? "placeholder.jpg")" alt="@c.Brand @c.Model" class="car-card-image" />
+                    <div class="car-card-body">
+                        <div class="car-card-top">
+                            <div>
+                                <h2>@c.Brand @c.Model</h2>
+                                <p>@c.Year • @c.Mileage km • @c.FuelType</p>
                             </div>
-
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <div class="fw-semibold">@c.Brand @c.Model</div>
-                                        <div class="text-muted small">
-                                            @c.Year • @c.Mileage km • @c.FuelType
-                                        </div>
-                                    </div>
-
-                                    <div class="fw-bold text-success">
-                                        @((c.SalePrice ?? 0).ToString("0")) €
-                                    </div>
-                                </div>
-
-                                <div class="mt-2 small text-muted">
-                                    @c.Engine • @c.HorsePower hp • @c.Transmission
-                                </div>
-
-                                <div class="mt-3 d-flex gap-2">
-                                    <a class="btn btn-sm btn-outline-primary w-100"
-                                       asp-controller="Sales"
-                                       asp-action="Details"
-                                       asp-route-id="@c.Id">
-                                        Детайли
-                                    </a>
-
-                                    @if (User.IsInRole("Admin"))
-                                    {
-                                        <a class="btn btn-sm btn-outline-secondary"
-                                           asp-controller="AdminCars"
-                                           asp-action="Edit"
-                                           asp-route-id="@c.Id">
-                                            Редактиране
-                                        </a>
-                                    }
-                                </div>
-                            </div>
+                            <strong class="price-badge">@((c.SalePrice ?? 0).ToString("0")) €</strong>
+                        </div>
+                        <div class="spec-row">
+                            <span>@c.Engine</span>
+                            <span>@c.HorsePower hp</span>
+                            <span>@c.Transmission</span>
+                        </div>
+                        <div class="card-actions">
+                            <a class="btn btn-brand w-100" asp-controller="Sales" asp-action="Details" asp-route-id="@c.Id">Виж детайли</a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a class="btn btn-brand-outline" asp-controller="AdminCars" asp-action="Edit" asp-route-id="@c.Id">Редакция</a>
+                            }
                         </div>
                     </div>
-                }
-            </div>
-
-            @if (Model.Cars.Count == 0)
-            {
-                <div class="alert alert-light border mt-3">
-                    Няма резултати по зададените филтри.
-                </div>
+                </article>
             }
         </div>
+
+        @if (Model.Cars.Count == 0)
+        {
+            <div class="empty-state">
+                <h3>Няма резултати</h3>
+                <p>Промени филтрите и опитай отново.</p>
+            </div>
+        }
     </div>
-</div>
+</section>
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="filtersCanvasSale">
     <div class="offcanvas-header">
@@ -92,6 +71,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body">
-        @await Html.PartialAsync("_CarFiltersSale", Model.Filter)
+        <div class="sidebar-card">
+            <h2>Филтри</h2>
+            @await Html.PartialAsync("_CarFiltersSale", Model.Filter)
+        </div>
     </div>
 </div>

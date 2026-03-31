@@ -1,5 +1,5 @@
 @using Microsoft.AspNetCore.Identity
-@using CarDealership.Models
+@using CarPoint.Models
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -14,7 +14,7 @@
                role="button"
                data-bs-toggle="dropdown"
                aria-expanded="false">
-                Здравей, @UserManager.GetUserName(User)
+                Р—РґСЂР°РІРµР№, @UserManager.GetUserName(User)
             </a>
 
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
@@ -22,7 +22,7 @@
                     <a class="dropdown-item"
                        asp-area="Identity"
                        asp-page="/Account/Manage/Index">
-                        Настройки
+                        РќР°СЃС‚СЂРѕР№РєРё
                     </a>
                 </li>
 
@@ -30,7 +30,7 @@
                     <a class="dropdown-item"
                        asp-controller="Rentals"
                        asp-action="MyRentals">
-                        Моите наеми
+                        РњРѕРёС‚Рµ РЅР°РµРјРё
                     </a>
                 </li>
 
@@ -38,7 +38,7 @@
                     <a class="dropdown-item"
                        asp-controller="Support"
                        asp-action="MyTickets">
-                        Моите билети за помощ
+                        РњРѕРёС‚Рµ Р±РёР»РµС‚Рё Р·Р° РїРѕРјРѕС‰
                     </a>
                 </li>
 
@@ -46,7 +46,7 @@
                     <a class="dropdown-item"
                        asp-controller="Favorites"
                        asp-action="Index">
-                        Любими
+                        Р›СЋР±РёРјРё
                     </a>
                 </li>
 
@@ -58,7 +58,7 @@
                           asp-page="/Account/Logout"
                           asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                         <button id="logout" type="submit" class="dropdown-item">
-                            Изход
+                            РР·С…РѕРґ
                         </button>
                     </form>
                 </li>

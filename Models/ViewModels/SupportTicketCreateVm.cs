@@ -1,10 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using CarDealership.Models;
+using CarPoint.Models;
 
-namespace CarDealership.Models.ViewModels.Support
+namespace CarPoint.Models.ViewModels.Support
 {
     public class SupportTicketCreateVm
     {
+        [Display(Name = "Име")]
+        public string? GuestName { get; set; }
+
+        [Display(Name = "Имейл")]
+        [EmailAddress(ErrorMessage = "Невалиден имейл адрес.")]
+        public string? GuestEmail { get; set; }
+
         [Display(Name = "Тема")]
         [Required(ErrorMessage = "Въведи тема.")]
         [StringLength(120, MinimumLength = 3, ErrorMessage = "Темата трябва да е между {2} и {1} символа.")]

@@ -1,26 +1,27 @@
-﻿@model CarDealership.Models.SupportTicket
-@using CarDealership.Models
+@model CarPoint.Models.SupportTicket
+@using CarPoint.Models
 
 @{
-    ViewData["Title"] = $"Тикет #{Model.Id}";
-    var msgs = ViewBag.Messages as List<SupportTicketMessage> ?? new();
+    ViewData["Title"] = $"Заявка #{Model.Id}";
+    var messages = ViewBag.Messages as List<SupportTicketMessage> ?? new();
+    var guestName = ViewBag.GuestName as string;
+    var guestEmail = ViewBag.GuestEmail as string;
 }
 
 <div class="container py-4">
-
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
-            <h2 class="h4 m-0">Тикет #@Model.Id</h2>
+            <h2 class="h4 m-0">Заявка #@Model.Id</h2>
             <div class="text-muted small">@Model.Subject</div>
         </div>
-
-        <a class="btn btn-outline-secondary" asp-action="My">← Назад</a>
+        <a class="btn btn-outline-secondary" asp-action="My">Назад</a>
     </div>
 
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger">@TempData["Error"]</div>
     }
+
     @if (TempData["Success"] != null)
     {
         <div class="alert alert-success">@TempData["Success"]</div>
@@ -29,37 +30,52 @@
     <div class="card shadow-sm mb-3">
         <div class="card-body">
             <div class="row g-2 small">
-                <div class="col-md-4"><span class="text-muted">Категория:</span> <strong>@Model.Category</strong></div>
-                <div class="col-md-4"><span class="text-muted">Приоритет:</span> <strong>@Model.Priority</strong></div>
-                <div class="col-md-4"><span class="text-muted">Статус:</span> <strong>@Model.Status</strong></div>
+                <div class="col-md-4"><span class="text-muted">Категория:</span> <strong>@Html.DisplayFor(_ => Model.Category)</strong></div>
+                <div class="col-md-4"><span class="text-muted">Приоритет:</span> <strong>@Html.DisplayFor(_ => Model.Priority)</strong></div>
+                <div class="col-md-4"><span class="text-muted">Статус:</span> <strong>@Html.DisplayFor(_ => Model.Status)</strong></div>
             </div>
+
+            @if (!string.IsNullOrWhiteSpace(guestName) || !string.IsNullOrWhiteSpace(guestEmail))
+            {
+                <hr />
+                <div class="row g-2 small">
+                    @if (!string.IsNullOrWhiteSpace(guestName))
+                    {
+                        <div class="col-md-6"><span class="text-muted">Име за контакт:</span> <strong>@guestName</strong></div>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(guestEmail))
+                    {
+                        <div class="col-md-6"><span class="text-muted">Имейл за контакт:</span> <strong>@guestEmail</strong></div>
+                    }
+                </div>
+            }
 
             @if (!string.IsNullOrWhiteSpace(Model.Description))
             {
                 <hr />
                 <div class="text-muted small mb-1">Описание</div>
-                <div style="white-space:pre-wrap">@Model.Description</div>
+                <div style="white-space: pre-wrap;">@Model.Description</div>
             }
         </div>
     </div>
 
-    <h5 class="mb-2">Разговор</h5>
+    <h5 class="mb-2">Съобщения</h5>
 
-    @if (!msgs.Any())
+    @if (!messages.Any())
     {
-        <div class="text-muted">Няма съобщения.</div>
+        <div class="text-muted">Все още няма съобщения по тази заявка.</div>
     }
     else
     {
         <div class="vstack gap-2 mb-3">
-            @foreach (var m in msgs)
+            @foreach (var message in messages)
             {
-                <div class="border rounded p-3 @(m.IsAdmin ? "bg-light" : "")">
+                <div class="border rounded p-3 @(message.IsAdmin ? "bg-light" : "")">
                     <div class="small text-muted d-flex justify-content-between">
-                        <span>@(m.IsAdmin ? "Админ" : "Ти")</span>
-                        <span>@m.CreatedAt.ToString("dd.MM.yyyy HH:mm")</span>
+                        <span>@(message.IsAdmin ? "Администратор" : "Ти")</span>
+                        <span>@message.CreatedAt.ToString("dd.MM.yyyy HH:mm")</span>
                     </div>
-                    <div style="white-space:pre-wrap">@m.Message</div>
+                    <div style="white-space: pre-wrap;">@message.Message</div>
                 </div>
             }
         </div>
@@ -67,7 +83,7 @@
 
     @if (Model.Status == TicketStatus.Closed)
     {
-        <div class="alert alert-secondary">Тикетът е затворен. Ако имаш нов проблем, създай нов тикет.</div>
+        <div class="alert alert-secondary">Заявката е затворена. Ако имаш нов въпрос, изпрати нова заявка.</div>
     }
     else
     {
@@ -75,11 +91,9 @@
             @Html.AntiForgeryToken()
             <input type="hidden" name="id" value="@Model.Id" />
 
-            <label class="form-label">Твоят отговор</label>
-            <textarea class="form-control" name="message" rows="4" placeholder="Напиши съобщение..."></textarea>
-
+            <label class="form-label">Твоето съобщение</label>
+            <textarea class="form-control" name="message" rows="4" placeholder="Напиши съобщение..." required></textarea>
             <button class="btn btn-primary mt-2" type="submit">Изпрати</button>
         </form>
     }
-
 </div>

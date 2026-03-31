@@ -1,4 +1,4 @@
-﻿namespace CarDealership.Models.ViewModels
+namespace CarPoint.Models.ViewModels
 {
     public class AdminEventsIndexVm
     {
@@ -7,6 +7,6 @@
         public DateTime? FromUtc { get; set; }
         public DateTime? ToUtc { get; set; }
         public List<string> Types { get; set; } = new();
-        public List<CarDealership.Models.AdminEvent> Rows { get; set; } = new();
+        public List<CarPoint.Models.AdminEvent> Rows { get; set; } = new();
     }
 }

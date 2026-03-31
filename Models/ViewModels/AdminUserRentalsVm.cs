@@ -1,4 +1,4 @@
-﻿namespace CarDealership.Models.ViewModels
+namespace CarPoint.Models.ViewModels
 {
     public class AdminUserRentalsVm
     {
