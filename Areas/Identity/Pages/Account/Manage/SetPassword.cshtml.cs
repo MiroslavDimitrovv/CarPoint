@@ -1,6 +1,5 @@
 #nullable disable
 
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using CarPoint.Models;
@@ -31,15 +30,15 @@ namespace CarPoint.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Въведете нова парола.")]
+            [StringLength(100, ErrorMessage = "Паролата трябва да е между {2} и {1} символа.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "New password")]
+            [Display(Name = "Нова парола")]
             public string NewPassword { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm new password")]
-            [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+            [Display(Name = "Потвърди новата парола")]
+            [Compare("NewPassword", ErrorMessage = "Новата парола и потвърждението не съвпадат.")]
             public string ConfirmPassword { get; set; }
         }
 
@@ -51,9 +50,7 @@ namespace CarPoint.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var hasPassword = await _userManager.HasPasswordAsync(user);
-
-            if (hasPassword)
+            if (await _userManager.HasPasswordAsync(user))
             {
                 return RedirectToPage("./ChangePassword");
             }
@@ -81,12 +78,12 @@ namespace CarPoint.Areas.Identity.Pages.Account.Manage
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+
                 return Page();
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your password has been set.";
-
+            StatusMessage = "Паролата беше зададена успешно.";
             return RedirectToPage();
         }
     }

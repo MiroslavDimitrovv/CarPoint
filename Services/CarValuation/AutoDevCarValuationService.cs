@@ -18,13 +18,19 @@ namespace CarPoint.Services.CarValuation
         {
             var apiKey = _config["AutoDev:ApiKey"];
             if (string.IsNullOrWhiteSpace(apiKey))
-                throw new InvalidOperationException("Липсва AutoDev:ApiKey в appsettings.json");
+            {
+                throw new InvalidOperationException(
+                    "AutoDev:ApiKey е изтекъл и в момента не може да бъде дадена оценка. Услугата работи успешно, но е нужно да се обнови API ключът, за да се получи оценка.");
+            }
 
             var limit = 50;
             if (int.TryParse(_config["AutoDev:Limit"], out var parsed) && parsed is >= 5 and <= 100)
+            {
                 limit = parsed;
+            }
 
-            var strictPrices = await QueryPricesAsync(apiKey,
+            var strictPrices = await QueryPricesAsync(
+                apiKey,
                 make: request.Brand,
                 model: request.Model,
                 year: request.Year,
@@ -35,7 +41,8 @@ namespace CarPoint.Services.CarValuation
 
             var wideMileagePrices = strictPrices.Count >= 5
                 ? strictPrices
-                : await QueryPricesAsync(apiKey,
+                : await QueryPricesAsync(
+                    apiKey,
                     make: request.Brand,
                     model: request.Model,
                     year: request.Year,
@@ -46,7 +53,8 @@ namespace CarPoint.Services.CarValuation
 
             var yearOnlyPrices = wideMileagePrices.Count >= 5
                 ? wideMileagePrices
-                : await QueryPricesAsync(apiKey,
+                : await QueryPricesAsync(
+                    apiKey,
                     make: request.Brand,
                     model: request.Model,
                     year: request.Year,
@@ -57,7 +65,8 @@ namespace CarPoint.Services.CarValuation
 
             var loosePrices = yearOnlyPrices.Count >= 5
                 ? yearOnlyPrices
-                : await QueryPricesAsync(apiKey,
+                : await QueryPricesAsync(
+                    apiKey,
                     make: request.Brand,
                     model: request.Model,
                     year: null,
@@ -69,14 +78,19 @@ namespace CarPoint.Services.CarValuation
             var prices = loosePrices;
 
             if (prices.Count == 0)
+            {
                 throw new InvalidOperationException("Не намерихме сравними обяви за тази комбинация марка/модел.");
+            }
 
             prices.Sort();
-            var median = (prices.Count % 2 == 1)
+            var median = prices.Count % 2 == 1
                 ? prices[prices.Count / 2]
                 : (prices[prices.Count / 2 - 1] + prices[prices.Count / 2]) / 2m;
 
-            if (request.HadAccident) median *= 0.90m;
+            if (request.HadAccident)
+            {
+                median *= 0.90m;
+            }
 
             median *= request.Condition switch
             {
@@ -115,10 +129,14 @@ namespace CarPoint.Services.CarValuation
             };
 
             if (year.HasValue)
+            {
                 qs.Add("vehicle.year=" + year.Value);
+            }
 
             if (mileageMin.HasValue && mileageMax.HasValue)
+            {
                 qs.Add("vehicle.mileage=" + Uri.EscapeDataString($"{Math.Max(0, mileageMin.Value)}-{Math.Max(0, mileageMax.Value)}"));
+            }
 
             var url = "https://api.auto.dev/listings?" + string.Join("&", qs);
 
@@ -130,12 +148,16 @@ namespace CarPoint.Services.CarValuation
             var body = await resp.Content.ReadAsStringAsync(ct);
 
             if (!resp.IsSuccessStatusCode)
+            {
                 return new List<decimal>();
+            }
 
             using var doc = JsonDocument.Parse(body);
 
             if (!doc.RootElement.TryGetProperty("data", out var dataEl) || dataEl.ValueKind != JsonValueKind.Array)
+            {
                 return new List<decimal>();
+            }
 
             var prices = new List<decimal>();
 
@@ -145,10 +167,10 @@ namespace CarPoint.Services.CarValuation
                     retail.ValueKind == JsonValueKind.Object &&
                     retail.TryGetProperty("price", out var priceEl) &&
                     priceEl.ValueKind == JsonValueKind.Number &&
-                    priceEl.TryGetDecimal(out var p) &&
-                    p > 0)
+                    priceEl.TryGetDecimal(out var price) &&
+                    price > 0)
                 {
-                    prices.Add(p);
+                    prices.Add(price);
                 }
             }
 

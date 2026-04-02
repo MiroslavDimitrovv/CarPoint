@@ -17,11 +17,20 @@
         <aside class="valuation-info">
             <h2>Какво е важно</h2>
             <ul>
-                <li>Марка, модел и година</li>
-                <li>Пробег, гориво и трансмисия</li>
-                <li>Състояние и история на автомобила</li>
+                <li>Марка, модел и година на производство</li>
+                <li>Пробег, гориво, двигател и трансмисия</li>
+                <li>Общо състояние, удари и брой собственици</li>
             </ul>
-            <p>Резултатът е ориентировъчен и е подходящ за първоначална преценка.</p>
+            <p>Резултатът е ориентировъчен и е подходящ за първоначална преценка преди продажба, покупка или оглед.</p>
+
+            <div class="valuation-info-actions">
+                <button type="button" class="btn btn-brand-outline w-100" data-bs-toggle="modal" data-bs-target="#conditionInfoModal">
+                    Какво означава състоянието
+                </button>
+                <button type="button" class="btn btn-brand-outline w-100" data-bs-toggle="modal" data-bs-target="#calculationInfoModal">
+                    Как се изчислява оценката
+                </button>
+            </div>
         </aside>
 
         <div class="valuation-form-wrap">
@@ -115,6 +124,7 @@
                     <input asp-for="OwnersCount" type="number" min="1" max="10" class="form-control" />
                     <span asp-validation-for="OwnersCount" class="text-danger"></span>
                 </div>
+
                 <div class="col-12">
                     <button id="submitBtn" type="submit" class="btn btn-brand">Изчисли оценка</button>
                 </div>
@@ -138,6 +148,39 @@
         </div>
     </div>
 </section>
+
+<div class="modal fade" id="conditionInfoModal" tabindex="-1" aria-labelledby="conditionInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content contact-modal">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="conditionInfoModalLabel">Какво означава състоянието</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Затвори"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Отлично</strong> - много запазен автомобил без сериозни забележки, с добър външен вид и поддържан интериор.</p>
+                <p><strong>Добро</strong> - нормални следи от употреба, без сериозни технически проблеми или належащи ремонти.</p>
+                <p><strong>Средно</strong> - има видимо износване, дребни забележки или нужда от обслужване, но автомобилът е използваем.</p>
+                <p class="mb-0"><strong>Лошо</strong> - сериозни външни или технически проблеми, нужда от ремонт или по-сериозна намеса.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="calculationInfoModal" tabindex="-1" aria-labelledby="calculationInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content contact-modal">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="calculationInfoModalLabel">Как се изчислява оценката</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Затвори"></button>
+            </div>
+            <div class="modal-body">
+                <p>Оценката се базира на сравними автомобили със сходни данни като марка, модел, година и пробег.</p>
+                <p>Системата взема пазарни обяви за подобни автомобили и изчислява ориентировъчна средна стойност.</p>
+                <p class="mb-0">След това резултатът се коригира според избраното състояние и дали автомобилът е имал катастрофа.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

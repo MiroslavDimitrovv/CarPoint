@@ -2,6 +2,8 @@ using System.Security.Claims;
 using CarPoint.Data;
 using CarPoint.Models;
 using CarPoint.Models.ViewModels.Support;
+using CarPoint.Services.AdminEvents;
+using CarPoint.Services.SupportNotifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +16,8 @@ namespace CarPoint.Controllers
         private readonly ApplicationDbContext _db;
         private readonly ILogger<SupportController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IAdminEventLogger _events;
+        private readonly ISupportNotificationService _supportNotifications;
 
         private const string GuestSupportEmail = "guest-support@carpoint.local";
         private const string GuestNamePrefix = "Име за контакт:";
@@ -22,11 +26,15 @@ namespace CarPoint.Controllers
         public SupportController(
             ApplicationDbContext db,
             ILogger<SupportController> logger,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IAdminEventLogger events,
+            ISupportNotificationService supportNotifications)
         {
             _db = db;
             _logger = logger;
             _userManager = userManager;
+            _events = events;
+            _supportNotifications = supportNotifications;
         }
 
         [HttpGet]
@@ -110,6 +118,13 @@ namespace CarPoint.Controllers
             _db.SupportTicketMessages.Add(message);
             await _db.SaveChangesAsync();
 
+            await _events.LogAsync(
+                type: "SupportTicketCreated",
+                title: isGuest ? "Създадена гост заявка за поддръжка" : "Създадена заявка за поддръжка",
+                details: $"Тема: {ticket.Subject}, Категория: {ticket.Category}, Приоритет: {ticket.Priority}",
+                targetUserId: ticket.UserId,
+                targetEmail: isGuest ? vm.GuestEmail?.Trim() : (await _userManager.GetUserAsync(User))?.Email);
+
             _logger.LogInformation(
                 "SupportTicket CREATED: TicketId={TicketId} UserId={UserId} Subject={Subject} At={AtUtc}",
                 ticket.Id,
@@ -141,6 +156,7 @@ namespace CarPoint.Controllers
 
             var guestUser = await _userManager.FindByEmailAsync(GuestSupportEmail);
             var guestUserId = guestUser?.Id;
+            var unreadTicketIds = await _supportNotifications.GetUnreadTicketIdsAsync(User);
 
             var tickets = await _db.SupportTickets
                 .AsNoTracking()
@@ -158,7 +174,8 @@ namespace CarPoint.Controllers
                     Subject = t.Subject,
                     Category = t.Category,
                     Priority = t.Priority,
-                    Status = t.Status
+                    Status = t.Status,
+                    HasUnreadReply = unreadTicketIds.Contains(t.Id)
                 })
                 .ToListAsync();
 
@@ -192,6 +209,7 @@ namespace CarPoint.Controllers
             ViewBag.Messages = messages;
             ViewBag.GuestName = ExtractGuestField(ticket.Description, GuestNamePrefix);
             ViewBag.GuestEmail = ExtractGuestField(ticket.Description, GuestEmailPrefix);
+            await _supportNotifications.MarkTicketAsSeenAsync(ticket.Id);
 
             return View(ticket);
         }
@@ -245,6 +263,13 @@ namespace CarPoint.Controllers
             ticket.UpdatedAt = DateTime.UtcNow;
 
             await _db.SaveChangesAsync();
+
+            await _events.LogAsync(
+                type: "SupportTicketReply",
+                title: "Потребителят изпрати съобщение по заявка",
+                details: $"TicketId={ticket.Id}, Subject={ticket.Subject}",
+                targetUserId: ticket.UserId,
+                targetEmail: (await _userManager.GetUserAsync(User))?.Email);
 
             _logger.LogInformation(
                 "SupportTicket USER_REPLY: TicketId={TicketId} UserId={UserId} At={AtUtc} MsgLen={Len}",

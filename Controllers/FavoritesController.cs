@@ -1,5 +1,6 @@
 using CarPoint.Data;
 using CarPoint.Models;
+using CarPoint.Services.AdminEvents;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,16 @@ namespace CarPoint.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IAdminEventLogger _events;
 
-        public FavoritesController(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
+        public FavoritesController(
+            ApplicationDbContext db,
+            UserManager<ApplicationUser> userManager,
+            IAdminEventLogger events)
         {
             _db = db;
             _userManager = userManager;
+            _events = events;
         }
 
         [HttpGet]
@@ -57,6 +63,8 @@ namespace CarPoint.Controllers
             var exists = await _db.Favorites
                 .FirstOrDefaultAsync(f => f.UserId == userId && f.CarId == carId);
 
+            var car = await _db.Cars.AsNoTracking().FirstOrDefaultAsync(c => c.Id == carId);
+
             if (exists == null)
             {
                 _db.Favorites.Add(new Favorite
@@ -71,6 +79,14 @@ namespace CarPoint.Controllers
             }
 
             await _db.SaveChangesAsync();
+
+            await _events.LogAsync(
+                type: exists == null ? "FavoriteAdded" : "FavoriteRemoved",
+                title: exists == null ? "Автомобилът е добавен в любими" : "Автомобилът е премахнат от любими",
+                details: car == null ? $"CarId={carId}" : $"{car.Brand} {car.Model}",
+                targetUserId: userId,
+                targetEmail: (await _userManager.GetUserAsync(User))?.Email,
+                carId: carId);
 
             if (!string.IsNullOrWhiteSpace(returnUrl))
                 return LocalRedirect(returnUrl);

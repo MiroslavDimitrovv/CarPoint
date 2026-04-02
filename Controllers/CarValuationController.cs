@@ -1,4 +1,5 @@
 using CarPoint.Models.ViewModels;
+using CarPoint.Services.AdminEvents;
 using CarPoint.Services.CarValuation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,10 +8,14 @@ namespace CarPoint.Controllers
     public class CarValuationController : Controller
     {
         private readonly ICarValuationService _carValuationService;
+        private readonly IAdminEventLogger _events;
 
-        public CarValuationController(ICarValuationService carValuationService)
+        public CarValuationController(
+            ICarValuationService carValuationService,
+            IAdminEventLogger events)
         {
             _carValuationService = carValuationService;
+            _events = events;
         }
 
         [HttpGet]
@@ -28,7 +33,9 @@ namespace CarPoint.Controllers
             vm.EstimatedPrice = null;
 
             if (!ModelState.IsValid)
+            {
                 return View(vm);
+            }
 
             var request = new CarValuationRequest
             {
@@ -52,17 +59,30 @@ namespace CarPoint.Controllers
 
                 vm.EstimatedPrice = result.EstimatedPrice;
                 vm.IsCalculated = true;
-
                 vm.Currency = result.Currency;
 
+                await _events.LogAsync(
+                    type: "CarValuationCalculated",
+                    title: "Изчислена е ориентировъчна оценка",
+                    details: $"{vm.Brand} {vm.Model}, {vm.Year}, {vm.Mileage} км, резултат: {vm.EstimatedPrice} {vm.Currency}");
             }
             catch (InvalidOperationException ex)
             {
                 vm.ErrorMessage = ex.Message;
+
+                await _events.LogAsync(
+                    type: "CarValuationFailed",
+                    title: "Неуспешна заявка за оценка",
+                    details: $"{vm.Brand} {vm.Model}, {vm.Year}, причина: {ex.Message}");
             }
             catch (Exception)
             {
                 vm.ErrorMessage = "Възникна грешка при изчислението. Моля, опитайте отново.";
+
+                await _events.LogAsync(
+                    type: "CarValuationFailed",
+                    title: "Грешка при заявка за оценка",
+                    details: $"{vm.Brand} {vm.Model}, {vm.Year}");
             }
 
             return View(vm);

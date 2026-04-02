@@ -73,7 +73,7 @@
                 <div class="border rounded p-3 @(message.IsAdmin ? "bg-light" : "")">
                     <div class="small text-muted d-flex justify-content-between">
                         <span>@(message.IsAdmin ? "Администратор" : "Ти")</span>
-                        <span>@message.CreatedAt.ToString("dd.MM.yyyy HH:mm")</span>
+                        <span>@(message.CreatedAt.ToString("dd.MM.yyyy HH:mm"))</span>
                     </div>
                     <div style="white-space: pre-wrap;">@message.Message</div>
                 </div>

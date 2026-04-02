@@ -3,6 +3,7 @@
     ViewData["Title"] = "Поддръжка - админ";
     var q = (string)(ViewBag.Q ?? "");
     TicketStatus? status = ViewBag.Status as TicketStatus?;
+    var priorityOrder = (string?)ViewBag.PriorityOrder ?? "";
     var rows = Model as IEnumerable<dynamic> ?? Enumerable.Empty<dynamic>();
 }
 
@@ -33,7 +34,16 @@
             </select>
         </div>
 
-        <div class="col-12 col-md-3 d-flex gap-2">
+        <div class="col-12 col-md-3">
+            <label class="form-label">Приоритет</label>
+            <select class="form-select" name="priorityOrder">
+                <option value="" selected="@(string.IsNullOrWhiteSpace(priorityOrder))">По дата</option>
+                <option value="high" selected="@(priorityOrder == "high")">Първо висок</option>
+                <option value="low" selected="@(priorityOrder == "low")">Първо нисък</option>
+            </select>
+        </div>
+
+        <div class="col-12 d-flex gap-2">
             <button class="btn btn-primary w-100" type="submit">Търси</button>
             <a class="btn btn-outline-secondary w-100" asp-action="Index">Изчисти</a>
         </div>
@@ -49,6 +59,7 @@
                     <th>Подател</th>
                     <th>Статус</th>
                     <th>Приоритет</th>
+                    <th>Отговор</th>
                     <th></th>
                 </tr>
             </thead>
@@ -57,7 +68,7 @@
                 {
                     <tr>
                         <td class="fw-semibold">@row.Id</td>
-                        <td>@((DateTime)row.CreatedAt).ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@(((DateTime)row.CreatedAt).ToString("dd.MM.yyyy HH:mm"))</td>
                         <td>
                             <div class="fw-semibold">@row.Subject</div>
                             <div class="text-muted small">@row.Category</div>
@@ -69,6 +80,16 @@
                         </td>
                         <td>@row.Status</td>
                         <td>@row.Priority</td>
+                        <td>
+                            @if (row.LastMessageIsFromUser)
+                            {
+                                <span class="badge bg-warning text-dark">Чака отговор</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted small">Няма ново</span>
+                            }
+                        </td>
                         <td class="text-end">
                             <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@row.Id">Отвори</a>
                         </td>

@@ -2,6 +2,7 @@ using System.Security.Claims;
 using CarPoint.Data;
 using CarPoint.Models;
 using CarPoint.Models.ViewModels.Support;
+using CarPoint.Services.AdminEvents;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,18 +14,23 @@ namespace CarPoint.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly ILogger<AdminSupportController> _logger;
+        private readonly IAdminEventLogger _events;
 
         private const string GuestNamePrefix = "Име за контакт:";
         private const string GuestEmailPrefix = "Имейл за контакт:";
 
-        public AdminSupportController(ApplicationDbContext db, ILogger<AdminSupportController> logger)
+        public AdminSupportController(
+            ApplicationDbContext db,
+            ILogger<AdminSupportController> logger,
+            IAdminEventLogger events)
         {
             _db = db;
             _logger = logger;
+            _events = events;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string? q, TicketStatus? status)
+        public async Task<IActionResult> Index(string? q, TicketStatus? status, string? priorityOrder)
         {
             q ??= string.Empty;
             var term = q.Trim();
@@ -45,7 +51,12 @@ namespace CarPoint.Controllers
                     t.Status,
                     Email = u.Email ?? string.Empty,
                     FullName = c != null ? c.FullName : null,
-                    Phone = c != null ? c.PhoneNumber : (u.PhoneNumber ?? null)
+                    Phone = c != null ? c.PhoneNumber : (u.PhoneNumber ?? null),
+                    LastMessageIsFromUser = _db.SupportTicketMessages
+                        .Where(m => m.TicketId == t.Id)
+                        .OrderByDescending(m => m.CreatedAt)
+                        .Select(m => (bool?)!m.IsAdmin)
+                        .FirstOrDefault() ?? false
                 };
 
             if (!string.IsNullOrWhiteSpace(term))
@@ -63,9 +74,14 @@ namespace CarPoint.Controllers
                 query = query.Where(x => x.Status == status.Value);
             }
 
-            var rows = await query
-                .OrderByDescending(x => x.Id)
-                .ToListAsync();
+            query = priorityOrder switch
+            {
+                "high" => query.OrderByDescending(x => x.Priority).ThenByDescending(x => x.Id),
+                "low" => query.OrderBy(x => x.Priority).ThenByDescending(x => x.Id),
+                _ => query.OrderByDescending(x => x.Id)
+            };
+
+            var rows = await query.ToListAsync();
 
             var resultRows = rows.Select(x => new
             {
@@ -77,11 +93,13 @@ namespace CarPoint.Controllers
                 x.Status,
                 Email = ExtractGuestField(x.Description, GuestEmailPrefix) ?? x.Email,
                 FullName = ExtractGuestField(x.Description, GuestNamePrefix) ?? x.FullName,
-                x.Phone
+                x.Phone,
+                x.LastMessageIsFromUser
             }).ToList();
 
             ViewBag.Q = q;
             ViewBag.Status = status;
+            ViewBag.PriorityOrder = priorityOrder;
 
             return View(resultRows);
         }
@@ -148,6 +166,12 @@ namespace CarPoint.Controllers
 
             await _db.SaveChangesAsync();
 
+            await _events.LogAsync(
+                type: "SupportTicketUpdated",
+                title: "Администратор обнови заявка за поддръжка",
+                details: $"TicketId={ticket.Id}, Status={ticket.Status}, Priority={ticket.Priority}",
+                targetUserId: ticket.UserId);
+
             TempData["Success"] = "Заявката е обновена.";
             return RedirectToAction(nameof(Details), new { id = vm.Id });
         }
@@ -191,6 +215,12 @@ namespace CarPoint.Controllers
             ticket.UpdatedAt = DateTime.UtcNow;
             await _db.SaveChangesAsync();
 
+            await _events.LogAsync(
+                type: "SupportTicketAdminReply",
+                title: "Администратор отговори по заявка",
+                details: $"TicketId={ticket.Id}, Subject={ticket.Subject}",
+                targetUserId: ticket.UserId);
+
             _logger.LogInformation(
                 "SupportTicket REPLY: TicketId={TicketId} AdminId={AdminId} At={AtUtc} MsgLen={Len}",
                 id,
@@ -216,6 +246,12 @@ namespace CarPoint.Controllers
             _db.SupportTicketMessages.RemoveRange(messages);
             _db.SupportTickets.Remove(ticket);
             await _db.SaveChangesAsync();
+
+            await _events.LogAsync(
+                type: "SupportTicketDeleted",
+                title: "Администратор изтри заявка за поддръжка",
+                details: $"TicketId={id}, Subject={ticket.Subject}",
+                targetUserId: ticket.UserId);
 
             TempData["Success"] = "Заявката е изтрита.";
             return RedirectToAction(nameof(Index));

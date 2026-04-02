@@ -2,27 +2,26 @@
 @using CarPoint.Models
 
 @{
-    ViewData["Title"] = "Автомобили – Заетост";
+    ViewData["Title"] = "Автомобили - заетост";
 
-    string BgOffice(OfficeLocation o) => o switch
+    string BgOffice(OfficeLocation office) => office switch
     {
         OfficeLocation.Ruse => "Офис Русе",
         OfficeLocation.Burgas => "Офис Бургас",
         OfficeLocation.Sofia => "Офис София",
         OfficeLocation.Varna => "Офис Варна",
-        _ => o.ToString()
+        _ => office.ToString()
     };
 }
 
 <div class="container py-4">
-
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h4 m-0">Автомобили – Заетост</h1>
+        <h1 class="h4 m-0">Автомобили - заетост</h1>
 
         <a class="btn btn-outline-secondary"
            asp-controller="AdminCars"
            asp-action="Index">
-            < Назад към Админ Панела
+            Назад към админ панела
         </a>
     </div>
 
@@ -48,10 +47,10 @@
                 @foreach (var car in Model)
                 {
                     var activeRentals = car.Rentals?
-                    .Where(r => r.Status == Rental.RentalStatus.Active)
-                    .OrderBy(r => r.StartDate)
-                    .ToList()
-                    ?? new List<Rental>();
+                        .Where(r => r.Status == Rental.RentalStatus.Active)
+                        .OrderBy(r => r.StartDate)
+                        .ToList()
+                        ?? new List<Rental>();
 
                     <tr>
                         <td>
@@ -59,7 +58,7 @@
                             <div class="text-muted small">@car.Year • @car.Engine</div>
                         </td>
 
-                        <td style="width:120px">
+                        <td style="width:140px">
                             @if (activeRentals.Any())
                             {
                                 <span class="badge bg-danger">Зает</span>
@@ -71,25 +70,30 @@
                         </td>
 
                         <td>
-                            @if (activeRentals.Any())
+                            @if (!activeRentals.Any())
                             {
-                                <ul class="mb-0 small">
-                                    @foreach (var r in activeRentals)
+                                <span class="text-muted">Няма активни наеми</span>
+                            }
+                            else
+                            {
+                                <ul class="mb-0 small list-unstyled">
+                                    @foreach (var rental in activeRentals)
                                     {
-                                        var isCash = r.PayMethod == Rental.PaymentMethod.CashOnPickup;
+                                        var isCash = rental.PayMethod == Rental.PaymentMethod.CashOnPickup;
 
-                                        <li class="mb-3">
+                                        <li class="border rounded p-3 mb-3">
                                             <div>
-                                                ?? <strong>@r.StartDate.ToString("dd.MM.yyyy") – @r.EndDate.ToString("dd.MM.yyyy")</strong>
+                                                Период:
+                                                <strong>@rental.StartDate.ToString("dd.MM.yyyy") - @rental.EndDate.ToString("dd.MM.yyyy")</strong>
                                             </div>
 
                                             <div class="text-muted">
-                                                ?? Вземане: <strong>@BgOffice(r.PickupOffice)</strong>
-                                                • Връщане: <strong>@BgOffice(r.ReturnOffice)</strong>
+                                                Вземане: <strong>@BgOffice(rental.PickupOffice)</strong>
+                                                • Връщане: <strong>@BgOffice(rental.ReturnOffice)</strong>
                                             </div>
 
                                             <div class="text-muted">
-                                                ?? Плащане:
+                                                Плащане:
                                                 @if (isCash)
                                                 {
                                                     <span class="badge bg-secondary">В брой</span>
@@ -99,7 +103,7 @@
                                                     <span class="badge bg-primary">Карта</span>
                                                 }
 
-                                                @if (r.IsPaid)
+                                                @if (rental.IsPaid)
                                                 {
                                                     <span class="badge bg-success ms-1">Платено</span>
                                                 }
@@ -109,204 +113,178 @@
                                                 }
                                             </div>
 
-                                            <div class="text-muted mt-1">
-                                                ?? @r.Client?.FullName
-                                            </div>
-
-                                            <div class="text-muted">
-                                                ?? @r.Client?.PhoneNumber
-                                            </div>
-
-                                            <div class="text-muted small">
-                                                ?? @r.Client?.Email
-                                            </div>
+                                            <div class="text-muted mt-1">Клиент: @rental.Client?.FullName</div>
+                                            <div class="text-muted">Телефон: @rental.Client?.PhoneNumber</div>
+                                            <div class="text-muted small">Имейл: @rental.Client?.Email</div>
 
                                             <div class="d-flex flex-wrap gap-2 mt-2">
-
                                                 <button type="button"
                                                         class="btn btn-sm btn-outline-primary"
                                                         data-bs-toggle="modal"
-                                                        data-bs-target="#editOfficesModal-@r.Id">
+                                                        data-bs-target="#editOfficesModal-@rental.Id">
                                                     Офиси
                                                 </button>
 
-                                                <div class="modal fade" id="editOfficesModal-@r.Id" tabindex="-1">
-                                                    <div class="modal-dialog modal-dialog-centered">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Промяна на офиси</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                            </div>
-
-                                                            <form method="post" asp-controller="AdminRentals" asp-action="UpdateOffices">
-                                                                @Html.AntiForgeryToken()
-                                                                <input type="hidden" name="rentalId" value="@r.Id" />
-
-                                                                <div class="modal-body">
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label">Вземане от</label>
-                                                                        <select class="form-select" name="pickupOffice" required>
-                                                                            <option value="Ruse" selected="@(r.PickupOffice == OfficeLocation.Ruse)">Офис Русе</option>
-                                                                            <option value="Burgas" selected="@(r.PickupOffice == OfficeLocation.Burgas)">Офис Бургас</option>
-                                                                            <option value="Sofia" selected="@(r.PickupOffice == OfficeLocation.Sofia)">Офис София</option>
-                                                                            <option value="Varna" selected="@(r.PickupOffice == OfficeLocation.Varna)">Офис Варна</option>
-                                                                        </select>
-                                                                    </div>
-
-                                                                    <div>
-                                                                        <label class="form-label">Връщане в</label>
-                                                                        <select class="form-select" name="returnOffice" required>
-                                                                            <option value="Ruse" selected="@(r.ReturnOffice == OfficeLocation.Ruse)">Офис Русе</option>
-                                                                            <option value="Burgas" selected="@(r.ReturnOffice == OfficeLocation.Burgas)">Офис Бургас</option>
-                                                                            <option value="Sofia" selected="@(r.ReturnOffice == OfficeLocation.Sofia)">Офис София</option>
-                                                                            <option value="Varna" selected="@(r.ReturnOffice == OfficeLocation.Varna)">Офис Варна</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отказ</button>
-                                                                    <button type="submit" class="btn btn-primary">Запази</button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                @if (isCash && !r.IsPaid)
+                                                @if (isCash && !rental.IsPaid)
                                                 {
                                                     <button type="button"
                                                             class="btn btn-sm btn-outline-success"
                                                             data-bs-toggle="modal"
-                                                            data-bs-target="#markPaidModal-@r.Id">
+                                                            data-bs-target="#markPaidModal-@rental.Id">
                                                         Маркирай платено
                                                     </button>
-
-                                                    <div class="modal fade" id="markPaidModal-@r.Id" tabindex="-1" aria-hidden="true">
-                                                        <div class="modal-dialog modal-dialog-centered">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title">Потвърждение за плащане</h5>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                </div>
-
-                                                                <div class="modal-body">
-                                                                    <p class="mb-2">
-                                                                        Сигурни ли сте, че искате да маркирате като <strong>ПЛАТЕН</strong> този наем?
-                                                                    </p>
-
-                                                                    <ul class="small mb-0">
-                                                                        <li>Автомобил: <strong>@car.Brand @car.Model</strong></li>
-                                                                        <li>Период: <strong>@r.StartDate.ToString("dd.MM.yyyy") – @r.EndDate.ToString("dd.MM.yyyy")</strong></li>
-                                                                        <li>Офиси: <strong>@BgOffice(r.PickupOffice)</strong> > <strong>@BgOffice(r.ReturnOffice)</strong></li>
-                                                                        <li>Клиент: <strong>@r.Client?.FullName</strong></li>
-                                                                        <li>Телефон: <strong>@r.Client?.PhoneNumber</strong></li>
-                                                                    </ul>
-
-                                                                    <div class="alert alert-warning mt-3 mb-0 small">
-                                                                        Това действие променя статуса на плащането и не може да се върне автоматично.
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отказ</button>
-
-                                                                    <form method="post"
-                                                                          asp-controller="AdminRentals"
-                                                                          asp-action="MarkPaid"
-                                                                          class="d-inline">
-                                                                        @Html.AntiForgeryToken()
-                                                                        <input type="hidden" name="rentalId" value="@r.Id" />
-                                                                        <button type="submit" class="btn btn-success">
-                                                                            Да, маркирай платено
-                                                                        </button>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 }
 
+                                                <button type="button"
+                                                        class="btn btn-sm btn-outline-danger"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#releaseModal-@rental.Id">
+                                                    Освободи
+                                                </button>
+                                            </div>
 
+                                            <div class="modal fade" id="editOfficesModal-@rental.Id" tabindex="-1">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Промяна на офиси</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
 
-                                                <form method="post"
-                                                      asp-controller="AdminRentals"
-                                                      asp-action="Release"
-                                                      class="d-inline">
-                                                    @Html.AntiForgeryToken()
-                                                    <input type="hidden" name="rentalId" value="@r.Id" />
+                                                        <form method="post" asp-controller="AdminRentals" asp-action="UpdateOffices">
+                                                            @Html.AntiForgeryToken()
+                                                            <input type="hidden" name="rentalId" value="@rental.Id" />
 
-                                                    <button type="button"
-                                                            class="btn btn-sm btn-outline-danger"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#releaseModal-@r.Id">
-                                                        Освободи
-                                                    </button>
-
-                                                    <div class="modal fade" id="releaseModal-@r.Id" tabindex="-1">
-                                                        <div class="modal-dialog modal-dialog-centered">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title">Освобождаване на автомобил предварително</h5>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label">Вземане от</label>
+                                                                    <select class="form-select" name="pickupOffice" required>
+                                                                        <option value="Ruse" selected="@(rental.PickupOffice == OfficeLocation.Ruse)">Офис Русе</option>
+                                                                        <option value="Burgas" selected="@(rental.PickupOffice == OfficeLocation.Burgas)">Офис Бургас</option>
+                                                                        <option value="Sofia" selected="@(rental.PickupOffice == OfficeLocation.Sofia)">Офис София</option>
+                                                                        <option value="Varna" selected="@(rental.PickupOffice == OfficeLocation.Varna)">Офис Варна</option>
+                                                                    </select>
                                                                 </div>
 
-                                                                <div class="modal-body">
-                                                                    <p class="mb-2">
-                                                                        Сигурни ли сте, че искате да освободите автомобила:
-                                                                        <strong>@car.Brand @car.Model</strong>?
-                                                                    </p>
-
-                                                                    <ul class="small mb-0">
-                                                                        <li>Период: <strong>@r.StartDate.ToString("dd.MM.yyyy") – @r.EndDate.ToString("dd.MM.yyyy")</strong></li>
-                                                                        <li>Офиси: <strong>@BgOffice(r.PickupOffice)</strong> > <strong>@BgOffice(r.ReturnOffice)</strong></li>
-                                                                        <li>Клиент: <strong>@r.Client?.FullName</strong></li>
-                                                                        <li>Телефон: <strong>@r.Client?.PhoneNumber</strong></li>
-                                                                        <li>Имейл: <strong>@r.Client?.Email</strong></li>
-                                                                    </ul>
+                                                                <div>
+                                                                    <label class="form-label">Връщане в</label>
+                                                                    <select class="form-select" name="returnOffice" required>
+                                                                        <option value="Ruse" selected="@(rental.ReturnOffice == OfficeLocation.Ruse)">Офис Русе</option>
+                                                                        <option value="Burgas" selected="@(rental.ReturnOffice == OfficeLocation.Burgas)">Офис Бургас</option>
+                                                                        <option value="Sofia" selected="@(rental.ReturnOffice == OfficeLocation.Sofia)">Офис София</option>
+                                                                        <option value="Varna" selected="@(rental.ReturnOffice == OfficeLocation.Varna)">Офис Варна</option>
+                                                                    </select>
                                                                 </div>
+                                                            </div>
 
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отказ</button>
-                                                                    <button type="submit" class="btn btn-danger">Да, освободи</button>
-                                                                </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отказ</button>
+                                                                <button type="submit" class="btn btn-primary">Запази</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @if (isCash && !rental.IsPaid)
+                                            {
+                                                <div class="modal fade" id="markPaidModal-@rental.Id" tabindex="-1" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Потвърждение за плащане</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+
+                                                            <div class="modal-body">
+                                                                <p class="mb-2">Сигурни ли сте, че искате да маркирате като <strong>ПЛАТЕН</strong> този наем?</p>
+
+                                                                <ul class="small mb-0">
+                                                                    <li>Автомобил: <strong>@car.Brand @car.Model</strong></li>
+                                                                    <li>Период: <strong>@rental.StartDate.ToString("dd.MM.yyyy") - @rental.EndDate.ToString("dd.MM.yyyy")</strong></li>
+                                                                    <li>Офиси: <strong>@BgOffice(rental.PickupOffice)</strong> > <strong>@BgOffice(rental.ReturnOffice)</strong></li>
+                                                                    <li>Клиент: <strong>@rental.Client?.FullName</strong></li>
+                                                                    <li>Телефон: <strong>@rental.Client?.PhoneNumber</strong></li>
+                                                                </ul>
+                                                            </div>
+
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отказ</button>
+
+                                                                <form method="post" asp-controller="AdminRentals" asp-action="MarkPaid" class="d-inline">
+                                                                    @Html.AntiForgeryToken()
+                                                                    <input type="hidden" name="rentalId" value="@rental.Id" />
+                                                                    <button type="submit" class="btn btn-success">Да, маркирай платено</button>
+                                                                </form>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </form>
+                                                </div>
+                                            }
 
+                                            <div class="modal fade" id="releaseModal-@rental.Id" tabindex="-1">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Освобождаване на автомобил</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+
+                                                        <div class="modal-body">
+                                                            <p class="mb-2">
+                                                                Сигурни ли сте, че искате да освободите автомобила:
+                                                                <strong>@car.Brand @car.Model</strong>?
+                                                            </p>
+
+                                                            <ul class="small mb-0">
+                                                                <li>Период: <strong>@rental.StartDate.ToString("dd.MM.yyyy") - @rental.EndDate.ToString("dd.MM.yyyy")</strong></li>
+                                                                <li>Офиси: <strong>@BgOffice(rental.PickupOffice)</strong> > <strong>@BgOffice(rental.ReturnOffice)</strong></li>
+                                                                <li>Клиент: <strong>@rental.Client?.FullName</strong></li>
+                                                                <li>Телефон: <strong>@rental.Client?.PhoneNumber</strong></li>
+                                                                <li>Имейл: <strong>@rental.Client?.Email</strong></li>
+                                                            </ul>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отказ</button>
+
+                                                            <form method="post" asp-controller="AdminRentals" asp-action="Release" class="d-inline">
+                                                                @Html.AntiForgeryToken()
+                                                                <input type="hidden" name="rentalId" value="@rental.Id" />
+                                                                <button type="submit" class="btn btn-danger">Да, освободи</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </li>
                                     }
                                 </ul>
-                            }
-                            else
-                            {
-                                <span class="text-muted">Няма активни наеми</span>
                             }
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-        @section Scripts {
-            <script>
-                (function () {
-                    document.addEventListener('submit', function (e) {
-                        const form = e.target;
-                        if (!form) return;
-
-                        if (form.getAttribute('action') && form.getAttribute('action').toLowerCase().includes('markpaid')) {
-                            const btn = form.querySelector('button[type="submit"]');
-                            if (btn) {
-                                btn.disabled = true;
-                                btn.textContent = 'Запис...';
-                            }
-                        }
-                    });
-                })();
-            </script>
-        }
-
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        (function () {
+            document.addEventListener('submit', function (e) {
+                const form = e.target;
+                if (!form) return;
+
+                const action = form.getAttribute('action') || '';
+                if (action.toLowerCase().includes('markpaid')) {
+                    const btn = form.querySelector('button[type="submit"]');
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.textContent = 'Запис...';
+                    }
+                }
+            });
+        })();
+    </script>
+}

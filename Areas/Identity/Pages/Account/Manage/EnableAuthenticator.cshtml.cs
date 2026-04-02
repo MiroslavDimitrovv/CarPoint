@@ -1,6 +1,5 @@
 #nullable disable
 
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
@@ -34,7 +33,6 @@ namespace CarPoint.Areas.Identity.Pages.Account.Manage
         }
 
         public string SharedKey { get; set; }
-
         public string AuthenticatorUri { get; set; }
 
         [TempData]
@@ -48,10 +46,10 @@ namespace CarPoint.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            [Required]
-            [StringLength(7, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Въведете кода за потвърждение.")]
+            [StringLength(7, ErrorMessage = "Кодът трябва да е между {2} и {1} символа.", MinimumLength = 6)]
             [DataType(DataType.Text)]
-            [Display(Name = "Verification Code")]
+            [Display(Name = "Код за потвърждение")]
             public string Code { get; set; }
         }
 
@@ -64,7 +62,6 @@ namespace CarPoint.Areas.Identity.Pages.Account.Manage
             }
 
             await LoadSharedKeyAndQrCodeUriAsync(user);
-
             return Page();
         }
 
@@ -83,13 +80,14 @@ namespace CarPoint.Areas.Identity.Pages.Account.Manage
             }
 
             var verificationCode = Input.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
-
             var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
-                user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
+                user,
+                _userManager.Options.Tokens.AuthenticatorTokenProvider,
+                verificationCode);
 
             if (!is2faTokenValid)
             {
-                ModelState.AddModelError("Input.Code", "Verification code is invalid.");
+                ModelState.AddModelError("Input.Code", "Кодът за потвърждение е невалиден.");
                 await LoadSharedKeyAndQrCodeUriAsync(user);
                 return Page();
             }
@@ -98,7 +96,7 @@ namespace CarPoint.Areas.Identity.Pages.Account.Manage
             var userId = await _userManager.GetUserIdAsync(user);
             _logger.LogInformation("User with ID '{UserId}' has enabled 2FA with an authenticator app.", userId);
 
-            StatusMessage = "Your authenticator app has been verified.";
+            StatusMessage = "Приложението за удостоверяване беше потвърдено успешно.";
 
             if (await _userManager.CountRecoveryCodesAsync(user) == 0)
             {
@@ -106,10 +104,8 @@ namespace CarPoint.Areas.Identity.Pages.Account.Manage
                 RecoveryCodes = recoveryCodes.ToArray();
                 return RedirectToPage("./ShowRecoveryCodes");
             }
-            else
-            {
-                return RedirectToPage("./TwoFactorAuthentication");
-            }
+
+            return RedirectToPage("./TwoFactorAuthentication");
         }
 
         private async Task LoadSharedKeyAndQrCodeUriAsync(ApplicationUser user)
@@ -130,12 +126,14 @@ namespace CarPoint.Areas.Identity.Pages.Account.Manage
         private string FormatKey(string unformattedKey)
         {
             var result = new StringBuilder();
-            int currentPosition = 0;
+            var currentPosition = 0;
+
             while (currentPosition + 4 < unformattedKey.Length)
             {
                 result.Append(unformattedKey.AsSpan(currentPosition, 4)).Append(' ');
                 currentPosition += 4;
             }
+
             if (currentPosition < unformattedKey.Length)
             {
                 result.Append(unformattedKey.AsSpan(currentPosition));

@@ -11,5 +11,6 @@ namespace CarPoint.Models.ViewModels.Support
         public TicketCategory Category { get; set; }
         public TicketPriority Priority { get; set; }
         public TicketStatus Status { get; set; }
+        public bool HasUnreadReply { get; set; }
     }
 }

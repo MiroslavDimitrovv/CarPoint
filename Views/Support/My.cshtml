@@ -31,6 +31,7 @@
                         <th>Категория</th>
                         <th>Приоритет</th>
                         <th>Статус</th>
+                        <th>Отговор</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,13 +39,23 @@
                     {
                         <tr>
                             <td class="fw-semibold">@ticket.Id</td>
-                            <td>@ticket.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>@(ticket.CreatedAt.ToString("dd.MM.yyyy HH:mm"))</td>
                             <td>
                                 <a asp-controller="Support" asp-action="Details" asp-route-id="@ticket.Id">@ticket.Subject</a>
                             </td>
                             <td>@Html.DisplayFor(_ => ticket.Category)</td>
                             <td>@Html.DisplayFor(_ => ticket.Priority)</td>
                             <td>@Html.DisplayFor(_ => ticket.Status)</td>
+                            <td>
+                                @if (ticket.HasUnreadReply)
+                                {
+                                    <span class="badge bg-danger">Нов отговор</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">Няма ново</span>
+                                }
+                            </td>
                         </tr>
                     }
                 </tbody>

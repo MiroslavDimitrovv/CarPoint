@@ -10,7 +10,7 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
             <h1 class="h4 m-0">Заявка #@Model.Id</h1>
-            <div class="text-muted small">Създадена: @Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</div>
+            <div class="text-muted small">Създадена: @(Model.CreatedAt.ToString("dd.MM.yyyy HH:mm"))</div>
         </div>
 
         <a class="btn btn-outline-secondary" asp-action="Index">Назад</a>
@@ -51,7 +51,7 @@
                                 <div class="border rounded p-3 @(message.IsAdmin ? "bg-light" : "")">
                                     <div class="small text-muted d-flex justify-content-between">
                                         <span>@(message.IsAdmin ? "Администратор" : "Клиент")</span>
-                                        <span>@message.CreatedAt.ToString("dd.MM.yyyy HH:mm")</span>
+                                        <span>@(message.CreatedAt.ToString("dd.MM.yyyy HH:mm"))</span>
                                     </div>
                                     <div style="white-space: pre-wrap;">@message.Message</div>
                                 </div>

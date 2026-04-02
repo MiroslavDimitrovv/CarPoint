@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")?.Trim();
+ 
+// LOCAL =" dotnet run --project CarPoint.csproj --urls "http://localhost:5292" "
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -45,6 +47,8 @@ builder.Services.AddScoped<ICarValuationService, AutoDevCarValuationService>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<CarPoint.Services.AdminEvents.IAdminEventLogger, CarPoint.Services.AdminEvents.AdminEventLogger>();
+builder.Services.AddScoped<CarPoint.Services.SupportNotifications.ISupportNotificationService, CarPoint.Services.SupportNotifications.SupportNotificationService>();
+builder.Services.AddSession();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -90,6 +94,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();

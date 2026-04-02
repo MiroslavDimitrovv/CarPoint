@@ -8,7 +8,13 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CarPoint.styles.css" asp-append-version="true" />
 </head>
+@inject CarPoint.Services.SupportNotifications.ISupportNotificationService SupportNotifications
 <body>
+    @{
+        var unreadSupportCount = (User.Identity?.IsAuthenticated ?? false)
+            ? await SupportNotifications.GetUnreadCountAsync(User)
+            : 0;
+    }
     <div class="shell">
         <header class="site-header">
             <div class="container">
@@ -29,7 +35,7 @@
                 <nav class="navbar navbar-expand-lg site-nav">
                     <div class="container-fluid px-0 nav-shell">
                         <a class="navbar-brand site-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                            <span class="brand-mark">CP</span>
+                            <span class="brand-mark" aria-hidden="true">🚗</span>
                             <span class="brand-copy">
                                 <strong>CarPoint</strong>
                                 <small>Покупка, наем и оценка на автомобили</small>
@@ -54,12 +60,24 @@
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle nav-user" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             @User.Identity!.Name
+                                            @if (unreadSupportCount > 0)
+                                            {
+                                                <span class="support-badge">@unreadSupportCount</span>
+                                            }
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
                                             <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Профил</a></li>
                                             <li><a class="dropdown-item" asp-controller="Rentals" asp-action="My">Моите наеми</a></li>
                                             <li><a class="dropdown-item" asp-controller="Favorites" asp-action="Index">Любими</a></li>
-                                            <li><a class="dropdown-item" asp-controller="Support" asp-action="My">Моите заявки</a></li>
+                                            <li>
+                                                <a class="dropdown-item d-flex justify-content-between align-items-center" asp-controller="Support" asp-action="My">
+                                                    <span>Моите заявки</span>
+                                                    @if (unreadSupportCount > 0)
+                                                    {
+                                                        <span class="support-badge">@unreadSupportCount</span>
+                                                    }
+                                                </a>
+                                            </li>
                                             @if (User.IsInRole("Admin"))
                                             {
                                                 <li><a class="dropdown-item" asp-controller="AdminCars" asp-action="Index">Админ панел</a></li>
@@ -97,6 +115,10 @@
             <div class="container footer-grid">
                 <div class="footer-meta">
                     <span>&copy; @DateTime.Now.Year CarPoint</span>
+                    <div class="footer-links">
+                        <a asp-controller="Home" asp-action="Terms">Условия за използване</a>
+                        <a asp-controller="Home" asp-action="Privacy">Лични данни</a>
+                    </div>
                 </div>
                 <a class="btn btn-brand footer-support" asp-controller="Support" asp-action="Create">Поддръжка</a>
             </div>
