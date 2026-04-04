@@ -72,7 +72,8 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     var hasMigrations = db.Database.GetMigrations().Any();
-    if (app.Environment.IsDevelopment() || !hasMigrations)
+    var isPostgres = db.Database.IsNpgsql();
+    if (app.Environment.IsDevelopment() || !hasMigrations || isPostgres)
     {
         db.Database.EnsureCreated();
     }
