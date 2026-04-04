@@ -34,32 +34,32 @@ namespace CarPoint.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Display(Name = "Email")]
+            [Display(Name = "Имейл")]
             [Required(ErrorMessage = "Моля, въведете имейл.")]
             [EmailAddress(ErrorMessage = "Моля, въведете валиден имейл адрес.")]
             public string Email { get; set; } = string.Empty;
 
-            [Display(Name = "First Name")]
-            [Required(ErrorMessage = "Моля, въведете собствено име.")]
-            [StringLength(50, MinimumLength = 2, ErrorMessage = "Собственото име трябва да е между {2} и {1} символа.")]
+            [Display(Name = "Име")]
+            [Required(ErrorMessage = "Моля, въведете име.")]
+            [StringLength(50, MinimumLength = 2, ErrorMessage = "Името трябва да е между {2} и {1} символа.")]
             public string FirstName { get; set; } = string.Empty;
 
-            [Display(Name = "Second Name")]
+            [Display(Name = "Фамилия")]
             [Required(ErrorMessage = "Моля, въведете фамилия.")]
             [StringLength(50, MinimumLength = 2, ErrorMessage = "Фамилията трябва да е между {2} и {1} символа.")]
             public string LastName { get; set; } = string.Empty;
 
-            [Display(Name = "Phone Number")]
+            [Display(Name = "Телефон")]
             [Required(ErrorMessage = "Моля, въведете телефонен номер.")]
             [Phone(ErrorMessage = "Моля, въведете валиден телефонен номер.")]
             public string PhoneNumber { get; set; } = string.Empty;
 
-            [Display(Name = "Password")]
+            [Display(Name = "Парола")]
             [Required(ErrorMessage = "Моля, въведете парола.")]
             [DataType(DataType.Password)]
             public string Password { get; set; } = string.Empty;
 
-            [Display(Name = "Confirm Password")]
+            [Display(Name = "Потвърди паролата")]
             [Required(ErrorMessage = "Моля, потвърдете паролата.")]
             [DataType(DataType.Password)]
             [Compare("Password", ErrorMessage = "Паролите не съвпадат.")]

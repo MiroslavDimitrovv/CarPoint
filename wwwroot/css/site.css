@@ -26,12 +26,19 @@ body {
   background: linear-gradient(180deg, #fbfcfe 0%, var(--bg) 100%);
 }
 
+body,
+.shell {
+  display: flex;
+  flex-direction: column;
+}
+
 a {
   color: inherit;
 }
 
 .shell {
   min-height: 100vh;
+  flex: 1 0 auto;
 }
 
 .site-header {
@@ -164,6 +171,7 @@ a {
 
 .page-shell {
   padding: 1rem 0 2rem;
+  flex: 1 0 auto;
 }
 
 .badge-soft,
@@ -448,7 +456,7 @@ a {
 }
 
 .site-footer {
-  margin: 0 0 2rem;
+  margin: auto 0 2rem;
   padding: 1.25rem 0;
   border-radius: var(--radius-lg);
 }

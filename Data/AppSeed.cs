@@ -14,6 +14,8 @@ namespace CarPoint.Data
         private const string GuestSupportEmail = "guest-support@carpoint.local";
         private const string GuestSupportPassword = "GuestSupport!123";
 
+        // Test@test1.com - Test@test1.com
+
         public static async Task SeedAsync(IServiceProvider services)
         {
             using var scope = services.CreateScope();

@@ -9,7 +9,7 @@
             <div class="card shadow-sm border-0">
                 <div class="card-body p-4">
                     <h1 class="h3 mb-2">Регистрация</h1>
-                    <p class="text-muted mb-4">Създай своя профил тук.</p>
+                    <p class="text-muted mb-4">Създай профил, за да следиш любими автомобили, наеми и заявки за поддръжка.</p>
 
                     <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
@@ -50,9 +50,7 @@
                             <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100">
-                            Регистрация
-                        </button>
+                        <button type="submit" class="btn btn-primary w-100">Създай профил</button>
 
                         <hr class="my-4" />
 

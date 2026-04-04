@@ -9,7 +9,7 @@
             <div class="card shadow-sm border-0">
                 <div class="card-body p-4">
                     <h1 class="h3 mb-2">Вход</h1>
-                    <p class="text-muted mb-4">Влез в профила си, за да следиш активността си.</p>
+                    <p class="text-muted mb-4">Влез в профила си, за да следиш активността, заявките и любимите си автомобили.</p>
 
                     <form id="account" method="post" autocomplete="off">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
@@ -45,16 +45,13 @@
                             </div>
                         </div>
 
-                        <button id="login-submit" type="submit" class="btn btn-primary w-100">
-                            Вход
-                        </button>
+                        <button id="login-submit" type="submit" class="btn btn-primary w-100">Вход</button>
 
                         <hr class="my-4" />
 
-                        <div class="d-flex justify-content-between">
-                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none">
-                                Нямаш акаунт? Регистрация
-                            </a>
+                        <div class="d-flex justify-content-between flex-wrap gap-2">
+                            <a asp-page="./ForgotPassword" class="text-decoration-none">Забравена парола?</a>
+                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none">Нямаш акаунт? Регистрация</a>
                         </div>
                     </form>
 
