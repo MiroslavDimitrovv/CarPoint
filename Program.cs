@@ -64,7 +64,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    if (app.Environment.IsDevelopment())
+    var hasMigrations = db.Database.GetMigrations().Any();
+    if (app.Environment.IsDevelopment() || !hasMigrations)
     {
         db.Database.EnsureCreated();
     }
