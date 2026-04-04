@@ -6,12 +6,18 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")?.Trim();
- 
-// LOCAL =" dotnet run --project CarPoint.csproj --urls "http://localhost:5292" "
+
+if (!string.IsNullOrWhiteSpace(connectionString) &&
+    (connectionString.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase) ||
+     connectionString.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase)))
+{
+    connectionString = ConvertPostgresUrlToNpgsql(connectionString);
+}
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -116,3 +122,20 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.Run();
+
+static string ConvertPostgresUrlToNpgsql(string databaseUrl)
+{
+    var uri = new Uri(databaseUrl);
+    var userInfoParts = uri.UserInfo.Split(':', 2);
+    var builder = new NpgsqlConnectionStringBuilder
+    {
+        Host = uri.Host,
+        Port = uri.Port > 0 ? uri.Port : 5432,
+        Database = uri.AbsolutePath.Trim('/'),
+        Username = Uri.UnescapeDataString(userInfoParts[0]),
+        Password = userInfoParts.Length > 1 ? Uri.UnescapeDataString(userInfoParts[1]) : string.Empty,
+        SslMode = SslMode.Require
+    };
+
+    return builder.ConnectionString;
+}
